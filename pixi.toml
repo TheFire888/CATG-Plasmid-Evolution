@@ -1,0 +1,18 @@
+[workspace]
+authors = ["Luan Leal <luanleal@usp.br>"]
+channels = ["conda-forge", "bioconda"]
+name = "firstTest"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.9.*"
+seqkit = ">=2.10.0,<3"
+biopython = ">=1.85,<2"
+diamond = ">=2.1.12,<3"
+memory_profiler = ">=0.61.0,<0.62"
+jupyterlab = ">=4.4.5,<5"
+needletail = ">=0.7.0,<0.8"
+pyrodigal = ">=3.6.3.post1, <4"
