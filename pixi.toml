@@ -1,7 +1,7 @@
 [workspace]
 authors = ["Luan Leal <luanleal@usp.br>"]
 channels = ["conda-forge", "bioconda"]
-name = "firstTest"
+name = "PlasmidEvo"
 platforms = ["linux-64"]
 version = "0.1.0"
 
