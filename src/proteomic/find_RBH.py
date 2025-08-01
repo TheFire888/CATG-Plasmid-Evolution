@@ -7,7 +7,8 @@ def find_RBH(file_in, file_out):
         for line in f_in:
             qseq_id, sseq_id = line.split()[:2]
             qseq_name, sseq_name = qseq_id.rsplit("_", 1)[0], sseq_id.rsplit("_", 1)[0]
-            best_hits[qseq_id][sseq_name] = sseq_id
+            if qseq_name != sseq_name:
+                best_hits[qseq_id][sseq_name] = sseq_id
     with open(file_in, 'r') as f_in, open(file_out, 'w') as f_out:
         for line in f_in:
             qseq_id, sseq_id = line.split()[:2]
@@ -19,4 +20,3 @@ if __name__ == "__main__":
     f_in = sys.argv[1]
     f_out = sys.argv[2]
     find_RBH(f_in, f_out)
-
