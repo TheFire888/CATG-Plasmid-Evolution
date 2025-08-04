@@ -1,8 +1,6 @@
 from multiprocessing.pool import ThreadPool
 from pyrodigal import GeneFinder
-#from needletail import parse_fastx_file
 import Bio.SeqIO
-#import click
 import sys
 
 def find_genes(seq):
