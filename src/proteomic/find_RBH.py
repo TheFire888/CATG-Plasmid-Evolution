@@ -1,5 +1,6 @@
 from collections import defaultdict
 import sys
+import click
 
 def find_RBH(file_in, file_out):
     best_hits = defaultdict(dict)
