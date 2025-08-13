@@ -6,19 +6,19 @@ import click
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
 @click.option("--min-cov", default=20.0)
-def find_RBH(input_file, output_file):
+def find_RBH(input_file, output_file, min_cov):
     best_hits = defaultdict(dict)
     with open(input_file, 'r') as f_in:
         for line in f_in:
-            qseq_id, sseq_id = line.split()[:2]
-            qseq_name, sseq_name = qseq_id.rsplit("_", 1)[0], sseq_id.rsplit("_", 1)[0]
-            if qseq_name != sseq_name:
-                best_hits[qseq_id][sseq_name] = sseq_id
+            qseq_gene_id, sseq_gene_id = line.split()[:2]
+            qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
+            if qseq_contig != sseq_contig:
+                best_hits[qseq_gene_id][sseq_contig] = sseq_gene_id
     with open(input_file, 'r') as f_in, open(output_file, 'w') as f_out:
         for line in f_in:
-            qseq_id, sseq_id = line.split()[:2]
-            qseq_name, sseq_name = qseq_id.rsplit("_", 1)[0], sseq_id.rsplit("_", 1)[0]
-            if (qseq_name in best_hits[sseq_id]) and (best_hits[sseq_id][qseq_name] == qseq_id):
+            qseq_gene_id, sseq_gene_id = line.split()[:2]
+            qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
+            if (qseq_contig in best_hits[sseq_gene_id]) and (best_hits[sseq_gene_id][qseq_contig] == qseq_gene_id):
                 f_out.write(line)
 
 if __name__ == "__main__":
