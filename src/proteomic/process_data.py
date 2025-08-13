@@ -3,6 +3,7 @@ from collections import defaultdict
 from multiprocessing.pool import ThreadPool
 from functools import partial
 import sys
+import click
 
 def calculate_wgrr(gene_counts, pair):
     (p_u, p_v), total_identity = pair
