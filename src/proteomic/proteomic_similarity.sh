@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # run:
-# $ ./analyze.sh N f_in f_out
+# $ ./proteomic_similarity.sh N f_in f_out
 
 SAMPLE_SIZE=$1
 INPUT_FILE=$2
@@ -25,7 +25,7 @@ python protein_predictor.py "${WORKDIR}/plasmid_sample.fna" "${WORKDIR}/proteins
 diamond makedb --in "${WORKDIR}/proteins.faa" -d "${WORKDIR}/DMND_DB" --quiet
 
 # Cria um arquivo .tsv correspondente ao formato gerado pelo BLAST
-diamond blastp -q "${WORKDIR}/proteins.faa" -d "${WORKDIR}/DMND_DB" -o "${WORKDIR}/DMND_BlastP.tsv" --very-sensitive --quiet
+diamond blastp -q "${WORKDIR}/proteins.faa" -d "${WORKDIR}/DMND_DB" -o "${WORKDIR}/DMND_BlastP.tsv" --ultra-sensitive --quiet
 
 # Filtra os Reciprocal Best Hits
 python find_RBH.py "${WORKDIR}/DMND_BlastP.tsv" "${WORKDIR}/RBH.tsv"
