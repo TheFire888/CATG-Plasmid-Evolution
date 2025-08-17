@@ -34,7 +34,7 @@ def process_wgrr(rbh_file, count_file, output_file):
     with open(output_file, 'w') as f_out, ThreadPool() as pool:
         results = pool.imap(calculate_wgrr_counted, sum_hits.items())
         for row in results:
-            f_out.write(f"{row[0]}\t{row[1]}\t{round(row[2], 4)}\n")
+            f_out.write(f"{row[0]}\t{row[1]}\t{round(row[2], 4)}\n ")
 
 if __name__ == "__main__":
     process_wgrr()
