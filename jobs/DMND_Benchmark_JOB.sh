@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH −−job−name=dmndBenchmark
-#SBATCH −−ntasks=8
-#SBATCH −−time=16:00:00 
+#SBATCH --job-name=dmndBenchmark
+#SBATCH --ntasks=8
+#SBATCH --time=16:00:00 
 
 export PATH="/home/lleal/.pixi/bin:$PATH"
 
