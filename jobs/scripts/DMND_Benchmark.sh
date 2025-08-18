@@ -10,7 +10,7 @@ for i in $(seq 1 10); do
     echo "Executando com X = $X (max-target-seqs = $MAX_TARGET)..."
 
     START_TIME=$(date +%s.%N)
-    pixi run diamond blastp -q "gene_sample.faa" -d "DMND_DB" -o "DMND_BlastP_$X.tsv" --ultra-sensitive --query-cover 50 --subject-cover 50 --quiet --outfmt 6 qseqid sseqid pident bitscore --max-target-seqs "$MAX_TARGET"
+    pixi run diamond blastp -q "data/gene_sample.faa" -d "DMND_DB" -o "test/DMND_BlastP_$X.tsv" --ultra-sensitive --query-cover 50 --subject-cover 50 --quiet --outfmt 6 qseqid sseqid pident bitscore --max-target-seqs "$MAX_TARGET"
     END_TIME=$(date +%s.%N)
 
     DURATION=$(awk "BEGIN {print $END_TIME - $START_TIME}")
