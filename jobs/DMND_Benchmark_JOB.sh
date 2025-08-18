@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 #SBATCH −−job−name=DMND_BENCHMARK 
 #SBATCH −−ntasks=8
