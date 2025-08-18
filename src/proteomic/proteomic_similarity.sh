@@ -8,6 +8,8 @@ INPUT_FILE=$2
 OUTPUT_FILE=$3
 WORKDIR=$(mktemp -d biotmp-XXXXX)
 
+echo "Iniciando trabalho em ${WORKDIR}"
+
 cleanup() {
     echo "Limpando arquivos temporários em ${WORKDIR}"
     rm -rf "${WORKDIR}"
