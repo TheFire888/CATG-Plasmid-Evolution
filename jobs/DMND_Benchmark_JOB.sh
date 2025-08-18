@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH −−job−name=DMND_BENCHMARK 
+#SBATCH −−job−name=dmnd_benchmark
 #SBATCH −−ntasks=8
 #SBATCH −−time=16:00:00 
 
