@@ -8,6 +8,6 @@ export PATH="/home/lleal/.pixi/bin:$PATH"
 
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') #####################\n"
 
-cd $SLURM_SUBMIT_DIR
+cd "$SLURM_SUBMIT_DIR/.."
 
-bash DMND_Benchmark.sh
+bash "scripts/DMND_Benchmark.sh"
