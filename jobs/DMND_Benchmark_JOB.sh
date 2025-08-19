@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=DMND-benchmark
-#SBATCH --ntasks=8
+#SBATCH --ntasks=16
 #SBATCH --time=32:00:00 
 
 SCRATCH="/scratch/local"
