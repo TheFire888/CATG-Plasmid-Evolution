@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=DMND-benchmark
 #SBATCH --ntasks=16
-#SBATCH --mem=128GB
+#SBATCH --mem=64GB
 #SBATCH --time=32:00:00 
 #SBATCH --output=DMNDbench_job_02.out
 #SBATCH --error=DMNDbench_job_02.err
