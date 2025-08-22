@@ -27,6 +27,8 @@ for i in $(seq 1 10); do
         --very-sensitive \
         --outfmt 6 qseqid sseqid pident bitscore \
         --max-target-seqs "$MAX_TARGET" \
+        --query-cover 50 \
+        --subject-cover 50
     #    --multiprocessing \
     #    --tmpdir "$TMPDIR" \
     #    --parallel-tmpdir "$PTMPDIR"
