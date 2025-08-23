@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=DMND-benchmark
-#SBATCH --ntasks=16
+#SBATCH --ntasks=1
 #SBATCH --mem=64GB
 #SBATCH --time=32:00:00 
 #SBATCH --output=DMNDbench_job_03.out
