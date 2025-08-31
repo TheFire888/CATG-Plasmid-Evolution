@@ -32,7 +32,7 @@ pixi run diamond blastp \
     -d "${WORKDIR}/DMND_DB" \
     -o "${WORKDIR}/DMND_BlastP.tsv" \
     --very-sensitive \
-    --outfmt 6 qseqid sseqid pident bitscore
+    --outfmt 6 qseqid sseqid pident bitscore \
     --max-target-seqs 2800 \
     --query-cover 75 \
     --subject-cover 75
