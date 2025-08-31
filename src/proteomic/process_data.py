@@ -1,9 +1,8 @@
-from itertools import combinations
 from collections import defaultdict
 from multiprocessing.pool import ThreadPool
 from functools import partial
-import sys
 import click
+
 
 def calculate_wgrr(gene_counts, pair):
     (p_u, p_v), total_identity = pair
@@ -12,6 +11,7 @@ def calculate_wgrr(gene_counts, pair):
     wgrr = total_identity / min_genes
 
     return [p_u, p_v, wgrr]
+
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("rbh_file", type=click.Path(exists=True, dir_okay=False))
@@ -35,6 +35,7 @@ def process_wgrr(rbh_file, count_file, output_file):
         results = pool.imap(calculate_wgrr_counted, sum_hits.items())
         for row in results:
             f_out.write(f"{row[0]}\t{row[1]}\t{round(row[2], 4)}\n ")
+
 
 if __name__ == "__main__":
     process_wgrr()

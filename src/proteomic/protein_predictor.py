@@ -1,11 +1,12 @@
 from multiprocessing.pool import ThreadPool
 from pyrodigal import GeneFinder
 import Bio.SeqIO
-import sys
 import click
+
 
 def find_genes(seq):
     return (seq.id, GeneFinder(meta=True).find_genes(bytes(seq.seq)))
+
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
@@ -31,4 +32,3 @@ def translate_genes(input_file, output_file, output_count_file):
 
 if __name__ == "__main__":
     translate_genes()
-    
