@@ -5,7 +5,7 @@
 
 SAMPLE_SIZE=$1
 INPUT_FILE=$2
-WORKDIR=$(mktemp -d "../test/biotmp-XXXXX")
+WORKDIR=$(mktemp -d "test/biotmp-XXXXX")
 
 echo "Iniciando trabalho em ${WORKDIR}"
 
@@ -18,7 +18,7 @@ echo "Iniciando trabalho em ${WORKDIR}"
 pixi run seqkit sample -p ${SAMPLE_SIZE} \
     ${INPUT_FILE} > "${WORKDIR}/plasmid_sample.fna"
 
-pixi run python ../src/proteomic/protein_predictor.py \
+pixi run python src/proteomic/protein_predictor.py \
     "${WORKDIR}/plasmid_sample.fna" \
     "${WORKDIR}/proteins.faa" \
     "${WORKDIR}/gene_count.tsv"
@@ -37,12 +37,12 @@ pixi run diamond blastp \
     --query-cover 75 \
     --subject-cover 75
 
-pixi run python ../src/proteomic/tsv_to_pajek.py \
+pixi run python src/proteomic/tsv_to_pajek.py \
     "${WORKDIR}/DMND_BlastP.tsv" \
     "${WORKDIR}/NetworkPajek.net"
 
-pixi run python ../src/proteomic/cluster.py \
+pixi run python src/proteomic/cluster.py \
     "${WORKDIR}/NetworkPajek.net" \
     "${WORKDIR}/HierarchicalClustering.newick"
 
-echo "Análise finalizada, salvo em '${OUTPUT_FILE}'"
+echo "Análise finalizada, salvo em '${WORKDIR}'"
