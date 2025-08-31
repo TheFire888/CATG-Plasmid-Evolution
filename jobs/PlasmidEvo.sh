@@ -15,4 +15,4 @@ echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
 cd "$SLURM_SUBMIT_DIR/.."
 
-bash ../scripts/proteomic_analyse.sh 0.1 "data/genbank_plasmid_seqs.fna"
+bash scripts/proteomic_analyse.sh 0.1 "data/genbank_plasmid_seqs.fna"
