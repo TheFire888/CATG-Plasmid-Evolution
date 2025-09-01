@@ -12,14 +12,6 @@ for i in $(seq 1 10); do
     echo "Executando com X = $X (max-target-seqs = $MAX_TARGET)..."
 
     START_TIME=$(date +%s.%N)
-    #pixi run diamond blastp \
-    #    -q "data/gene_sample.faa" \
-    #    -d "data/DMND_DB" \
-    #    --multiprocessing \
-    #    --mp-init \
-    #    --tmpdir "$TMPDIR" \
-    #    --parallel-tmpdir "$PTMPDIR"
-
     pixi run diamond blastp \
         -q "data/gene_sample.faa" \
         -d "data/DMND_DB" \
@@ -29,24 +21,11 @@ for i in $(seq 1 10); do
         --max-target-seqs "$MAX_TARGET" \
         --query-cover 50 \
         --subject-cover 50
-    #    --multiprocessing \
-    #    --tmpdir "$TMPDIR" \
-    #    --parallel-tmpdir "$PTMPDIR"
-    #PID_DIAMOND=$!
-
-    #bash mem_profiler.sh "$PID_DIAMOND" "diamond_mem_usage_$X.log" &
-    #PID_PROFILER=$!
-
-    #wait "$PID_DIAMOND"
-
     END_TIME=$(date +%s.%N)
-
-    #kill "$PID_PROFILER"
 
     DURATION=$(awk "BEGIN {print $END_TIME - $START_TIME}")
 
     echo "$X | $DURATION" >> "$LOGFILE"
-
 done
 
 echo "Benchmark concluído. Resultados salvos em $LOGFILE"

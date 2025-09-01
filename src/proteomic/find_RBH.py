@@ -1,7 +1,7 @@
 from collections import defaultdict
-import sys
 import click
 from file_read_backwards import FileReadBackwards
+
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
@@ -21,6 +21,7 @@ def find_RBH(input_file, output_file, min_cov):
             qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
             if (qseq_contig in best_hits[sseq_gene_id]) and (best_hits[sseq_gene_id][qseq_contig] == qseq_gene_id):
                 f_out.write(line + "\n")
+
 
 if __name__ == "__main__":
     find_RBH()
