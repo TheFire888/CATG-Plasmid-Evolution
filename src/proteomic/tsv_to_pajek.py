@@ -12,7 +12,12 @@ def discover_data(input_file):
     """
     Primeira passagem: lê o arquivo para descobrir todos os nós únicos
     (genes e plasmídeos) e para mapear cada gene ao seu bitscore de autohit.
-    Retorna um conjunto de nós e um defaultdict de autohits.
+
+    Args:
+        input_file (str): arquivo de entrada com os hits
+
+    Returns:
+        Retorna um conjunto de nós e um defaultdict de autohits.
     """
     nodes = set()
     autohits = defaultdict(lambda: 1.0)
@@ -53,6 +58,10 @@ def generate_pajek_file(input_file, output_file):
     partições, onde os contigs se conectam aos seus genes com peso 1.0
     e os genes se conectam entre si com peso igual a razão do bitscore
     dividido pelo bitscore do próprio gene.
+
+    Args:
+        input_file (str): arquivo de entrada com os hits
+        output_file (str): arquivo de saída, formato Pajek
     """
     node_to_id, autohits = discover_data(input_file)
 

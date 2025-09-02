@@ -1,3 +1,8 @@
+"""
+Esse módulo é uma interface de linha de comando para filtrar
+os Reciprocal Best Hits de um output do DIAMOND.
+"""
+
 from collections import defaultdict
 import click
 from file_read_backwards import FileReadBackwards
@@ -7,7 +12,14 @@ from file_read_backwards import FileReadBackwards
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
 @click.option("--min-cov", default=20.0)
-def find_RBH(input_file, output_file, min_cov):
+def find_rbh(input_file, output_file):
+    """
+    Filtra os RBH em um arquivo de saída do DIAMOND
+
+    Args:
+        input_file (str): Arquivo do DIAMOND a ser filtrado.
+        output_file (str): Arquivo de saída, apenas com os RBH.
+    """
     best_hits = defaultdict(dict)
     with FileReadBackwards(input_file, encoding="utf-8") as f_in:
         for line in f_in:
@@ -15,7 +27,7 @@ def find_RBH(input_file, output_file, min_cov):
             qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
             if qseq_contig != sseq_contig:
                 best_hits[qseq_gene_id][sseq_contig] = sseq_gene_id
-    with FileReadBackwards(input_file, encoding="utf-8") as f_in, open(output_file, 'w') as f_out:
+    with FileReadBackwards(input_file, encoding="utf-8") as f_in, open(output_file, 'w', encoding="utf-8") as f_out:
         for line in f_in:
             qseq_gene_id, sseq_gene_id = line.split()[:2]
             qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
@@ -24,4 +36,4 @@ def find_RBH(input_file, output_file, min_cov):
 
 
 if __name__ == "__main__":
-    find_RBH()
+    find_rbh()

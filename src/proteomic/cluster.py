@@ -1,3 +1,8 @@
+"""
+Esse módulo é uma interface de linha de comando para encontrar
+agrupamentos em um grafo.
+"""
+
 import click
 from infomap import Infomap
 
@@ -6,6 +11,16 @@ from infomap import Infomap
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
 def cluster_data(input_file, output_file):
+    """
+    Aplica o algoritmo do Infomap 10 vezes para encontrar
+    agrupamentos em um grafo.
+
+    Args:
+        input_file (str): arquivo Pajek de entrada.
+        output_file (str): arquivo de saída com os
+        agrupamentos encontrados
+    """
+
     im = Infomap(num_trials=10)
     im.read_file(input_file)
     im.run()

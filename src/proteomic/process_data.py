@@ -18,11 +18,18 @@ def calculate_wgrr(gene_counts, pair):
 @click.argument("count_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
 def process_wgrr(rbh_file, count_file, output_file):
-    with open(count_file, 'r') as count_f:
+    """
+    Função para processar e calcular o weighted Gene Relatedness
+    Repertoire em um arquivo do DIAMOND pré-filtrado.
+
+    Args:
+        
+    """
+    with open(count_file, 'r', encoding="utf-8") as count_f:
         gene_counts = {line.split()[0]: int(line.split()[1]) for line in count_f}
 
     sum_hits = defaultdict(float)
-    with open(rbh_file, 'r') as rbh_f:
+    with open(rbh_file, 'r', encoding="utf-8") as rbh_f:
         for line in rbh_f:
             parts = line.split()[:3]
             qseq_gene_id, sseq_gene_id, identity = parts[0], parts[1], float(parts[2])
@@ -31,7 +38,7 @@ def process_wgrr(rbh_file, count_file, output_file):
             sum_hits[pair_key] += identity
 
     calculate_wgrr_counted = partial(calculate_wgrr, gene_counts)
-    with open(output_file, 'w') as f_out, ThreadPool() as pool:
+    with open(output_file, 'w', encoding="utf-8") as f_out, ThreadPool() as pool:
         results = pool.imap(calculate_wgrr_counted, sum_hits.items())
         for row in results:
             f_out.write(f"{row[0]}\t{row[1]}\t{round(row[2], 4)}\n ")
