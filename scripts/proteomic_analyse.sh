@@ -37,12 +37,16 @@ pixi run diamond blastp \
     --query-cover 75 \
     --subject-cover 75
 
-pixi run python src/proteomic/tsv_to_pajek.py \
+pixi run python src/proteomic/find_rbh.py \
     "${WORKDIR}/DMND_BlastP.tsv" \
-    "${WORKDIR}/NetworkPajek.net"
+    "${WORKDIR}/filtered_DMBD_BlastP.tsv" \
+
+pixi run python src/proteomic/tsv_to_ncol.py \
+    "${WORKDIR}/filtered_DMBD_BlastP.tsv" \
+    "${WORKDIR}/Graph.ncol"
 
 pixi run python src/proteomic/cluster.py \
-    "${WORKDIR}/NetworkPajek.net" \
-    "${WORKDIR}/HierarchicalClustering.newick"
+    "${WORKDIR}/Graph.ncol" \
+    "${WORKDIR}/ClusteredGraph" # Rever esse output
 
 echo "Análise finalizada, salvo em '${WORKDIR}'"

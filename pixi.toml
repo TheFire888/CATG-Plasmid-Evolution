@@ -27,6 +27,8 @@ python-lsp-server = ">=1.13.1,<2"
 pyright = ">=1.1.403,<2"
 pylint = ">=3.3.8,<4"
 igraph = ">=0.10.16,<0.11"
+python-igraph = ">=0.11.9,<0.12"
+pycairo = ">=1.28.0,<2"
 
 [pypi-dependencies]
 infomap = ">=2.8.0, <3"

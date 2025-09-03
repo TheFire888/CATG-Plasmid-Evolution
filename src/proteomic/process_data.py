@@ -5,6 +5,18 @@ import click
 
 
 def calculate_wgrr(gene_counts, pair):
+    """
+    Função para calcular o wGRR entre um par de contigs.
+
+    Args:
+        gene_counts (dict): dicionário com contigs como chave e
+        total de genes preditos como valor.
+        pair (tuple): par ordenado dos contigs, associado ao valor
+        total da identidade.
+
+    Returns:
+        list: lista contendo o par de contigs e o wGRR calculado
+    """
     (p_u, p_v), total_identity = pair
     count_u, count_v = gene_counts.get(p_u), gene_counts.get(p_v)
     min_genes = min(count_u, count_v)
@@ -23,7 +35,10 @@ def process_wgrr(rbh_file, count_file, output_file):
     Repertoire em um arquivo do DIAMOND pré-filtrado.
 
     Args:
-        
+        rbh_file (str): arquivo filtrado para conter apenas RBH.
+        count_file (str): arquivo com a contagem de genes por
+        contig.
+        output_file (str): arquivo de saída.
     """
     with open(count_file, 'r', encoding="utf-8") as count_f:
         gene_counts = {line.split()[0]: int(line.split()[1]) for line in count_f}
