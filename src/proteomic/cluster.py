@@ -35,6 +35,21 @@ def infomap_cluster_data(input_file, output_file):
     im.write_newick(output_file)
 
 
+def generate_graph(input_file):
+    """
+    Gera um grafo baseado no arquivo de entrada (formato ncol)
+
+    Args:
+        input_file (str): arquivo de entrada, formato ncol.
+    Returns:
+        graph: objeto de grafo gerado a partir do arquivo de entrada.
+
+    """
+    g = ig.Graph.Load(input_file, format="ncol")
+    g.to_undirected(mode="each")
+    return g
+
+
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
@@ -50,7 +65,7 @@ def leiden_cluster_data(input_file, output_file):
     """
 
     click.echo("Loading graph...", err=True)
-    g = ig.Graph.Load(input_file, format="pajek")
+    g = generate_graph(input_file)
 
     click.echo("Clustering data...", err=True)
     community = ig.Graph.community_leiden(g)
@@ -58,7 +73,8 @@ def leiden_cluster_data(input_file, output_file):
     click.echo("Writing output...", err=True)
     with open(output_file, 'w', encoding="utf-8") as f:
         for cluster in community:
-            f.write(' '.join(map(str, cluster)) + '\n')
+            node_names = [g.vs[node_id]["name"] for node_id in cluster]
+            f.write(' '.join(node_names) + '\n')
 
 
 if __name__ == "__main__":
