@@ -42,13 +42,14 @@ pixi run python src/proteomic/find_rbh.py \
     "${WORKDIR}/filtered_DMBD_BlastP.tsv" \
 
 echo "Gerando grafo..." >&2
-pixi run python src/proteomic/tsv_to_ncol.py \
+pixi run python src/proteomic/tsv_to_graph.py pajek\
     "${WORKDIR}/filtered_DMBD_BlastP.tsv" \
-    "${WORKDIR}/Graph.ncol"
+    "${WORKDIR}/Graph.net"
 
 echo "Agrupando comunidades..." >&2
-pixi run python src/proteomic/cluster.py \
-    "${WORKDIR}/Graph.ncol" \
-    "${WORKDIR}/ClusteredGraph.clu"
+pixi run infomap \
+    "${WORKDIR}/Graph.net" \
+    "${WORKDIR}" \
+
 
 echo "Análise finalizada, salvo em '${WORKDIR}'" >&2
