@@ -43,7 +43,7 @@ pixi run python src/proteomic/find_rbh.py \
     "${WORKDIR}/filtered_DMBD_BlastP.tsv" \
 
 echo "Gerando grafo..." >&2
-pixi run python src/proteomic/tsv_to_graph.py pajek\
+pixi run python src/proteomic/tsv_to_graph.py pajek \
     "${WORKDIR}/filtered_DMBD_BlastP.tsv" \
     "${WORKDIR}/Graph.net"
 

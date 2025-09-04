@@ -24,6 +24,8 @@ def find_rbh(input_file, output_file):
         for line in f_in:
             qseq_gene_id, sseq_gene_id = line.split()[:2]
             qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
+            if (qseq_contig == sseq_contig) and (qseq_gene_id != sseq_gene_id):
+                continue
             best_hits[qseq_gene_id][sseq_contig] = sseq_gene_id
     with FileReadBackwards(input_file, encoding="utf-8") as f_in, open(output_file, 'w', encoding="utf-8") as f_out:
         for line in f_in:
