@@ -16,4 +16,8 @@ echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 cd "$SLURM_SUBMIT_DIR/.."
 
 pixi run infomap "test/biotmp-qcMTC/Graph.net" "test/infomap-test" \
-    --two-level --ftree --clu --markov-time 5
+    --two-level --ftree --markov-time 5
+
+pixi run python src/proteomic/get_contigs_modules.py \
+    "test/infomap-test/Graph.ftree" \
+    "test/infomap-test/contigs_per_module.tsv"
