@@ -34,7 +34,8 @@ pixi run diamond blastp \
     --outfmt 6 qseqid sseqid pident bitscore \
     --max-target-seqs $MAX_TARGET_SEQS \
     --query-cover 75 \
-    --subject-cover 75
+    --subject-cover 75 \
+    --min-score 30
 
 echo "Filtrando Reciprocal Best Hits..." >&2
 pixi run python src/proteomic/find_rbh.py \
@@ -50,6 +51,8 @@ echo "Agrupando comunidades..." >&2
 pixi run infomap \
     "${WORKDIR}/Graph.net" \
     "${WORKDIR}" \
-
+    --two-level \
+    --ftree \
+    --clu
 
 echo "Análise finalizada, salvo em '${WORKDIR}'" >&2
