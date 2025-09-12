@@ -21,6 +21,7 @@ def find_rbh(input_file, output_file):
     """
     best_hits = defaultdict(dict)
     with FileReadBackwards(input_file, encoding="utf-8") as f_in:
+        click.echo("Primeira leitura: salvando hits...", err=True)
         for line in f_in:
             qseq_gene_id, sseq_gene_id = line.split()[:2]
             qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
@@ -28,6 +29,7 @@ def find_rbh(input_file, output_file):
                 continue
             best_hits[qseq_gene_id][sseq_contig] = sseq_gene_id
     with FileReadBackwards(input_file, encoding="utf-8") as f_in, open(output_file, 'w', encoding="utf-8") as f_out:
+        click.echo("Segunda leitura: filtrando hits...", err=True)
         for line in f_in:
             qseq_gene_id, sseq_gene_id = line.split()[:2]
             qseq_contig, sseq_contig = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]

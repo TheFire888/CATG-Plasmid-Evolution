@@ -18,6 +18,7 @@ def process_ftree(input_path, output_path):
             open(input_path, 'r', encoding="utf-8") as infile,
             open(output_path, 'w', encoding="utf-8") as outfile
             ):
+        click.echo("Procurando padrões...")
 
         outfile.write("# Module_ID, Contig\n")
         line_start_pattern = re.compile(r'^[0-9]+:')

@@ -33,6 +33,7 @@ def infomap_cluster_data(input_file, output_file, m_time):
         controlar a granularidade
     """
     output_name = "f{output_file}_{m_time}"
+    click.echo("Iniciando agrupamento com Infomap...", err=True)
 
     im = Infomap(num_trials=10, two_level=True, out_name=output_name,
                  ftree=True, markov_time=m_time, variable_markov_time=True)
@@ -69,13 +70,14 @@ def leiden_cluster_data(input_file, output_file):
         agrupamentos encontrados
     """
 
-    click.echo("Loading graph...", err=True)
+    click.echo("Iniciando agrupamento com Leiden...", err=True)
+    click.echo("Carregando grafo...", err=True)
     g = generate_graph(input_file)
 
-    click.echo("Clustering data...", err=True)
+    click.echo("Agrupando dados...", err=True)
     community = ig.Graph.community_leiden(g)
 
-    click.echo("Writing output...", err=True)
+    click.echo("Escrevendo saída...", err=True)
     with open(output_file, 'w', encoding="utf-8") as f:
         for cluster in community:
             node_names = [g.vs[node_id]["name"] for node_id in cluster]
