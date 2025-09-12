@@ -78,6 +78,9 @@ def process_ftree(input_path):
 
 
 @cli.command(name="eval", help="Usado para determinar a qualidade dos módulos")
+@click.argument("count_file", type=click.Path(exists=True, dir_okay=False))
+@click.argument("ftree_file", type=click.Path(exists=True, dir_okay=False))
+@click.argument("rbh_file", type=click.Path(exists=True, dir_okay=False))
 def evaluate_modules(count_file, ftree_file, rbh_file):
     """
     Calcula uma métrica para cada par de genomas em um módulo.
