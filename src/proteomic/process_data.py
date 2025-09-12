@@ -52,7 +52,7 @@ def compare_genome_pairs(input_file):
     return df
 
 
-@cli.command(name="cpm", help="contigs por módulo")
+@cli.command(name="cpm", help="Usado para determinar contigs por módulo")
 @click.argument("input_path", type=click.Path(exists=True, dir_okay=False))
 def process_ftree(input_path):
     """
@@ -77,11 +77,14 @@ def process_ftree(input_path):
     return contigs_per_module
 
 
+@cli.command(name="eval", help="Usado para determinar a qualidade dos módulos")
 def evaluate_modules(count_file, ftree_file, rbh_file):
     """
     Calcula uma métrica para cada par de genomas em um módulo.
 
     A métrica é: hits / (genes_genoma1 + genes_genoma2)
+
+    Depois faz a média por módulo
     """
     click.echo("Lendo arquivo de contagem de genes...")
     gene_counts = {}
