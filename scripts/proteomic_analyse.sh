@@ -45,14 +45,14 @@ pixi run python src/proteomic/find_rbh.py \
 echo "Gerando grafo..." >&2
 pixi run python src/proteomic/tsv_to_graph.py pajek \
     "${WORKDIR}/filtered_DMBD_BlastP.tsv" \
-    "${WORKDIR}/Graph.net"
+    "${WORKDIR}/graph.net"
 
 echo "Agrupando comunidades..." >&2
-pixi run infomap \
-    "${WORKDIR}/Graph.net" \
-    "${WORKDIR}" \
-    --two-level \
-    --ftree \
-    --clu
+pixi run python src/proteomic/cluster.py infomap \
+    "${WORKDIR}/graph.net" \
+    "${WORKDIR}/infomap_clusters"
+
+echo "Analizando resultados..."
+
 
 echo "Análise finalizada, salvo em '${WORKDIR}'" >&2

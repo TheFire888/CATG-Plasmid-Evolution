@@ -1,63 +1,128 @@
+"""
+Esse módulo é uma interface de linha de comando feita para analisar
+e avaliar agrupamentos realizados pelo PlasmidEvo.
+"""
+import re
 from collections import defaultdict
-from multiprocessing.pool import ThreadPool
-from functools import partial
+from itertools import combinations
 import click
+import polars as pl
 
 
-def calculate_wgrr(gene_counts, pair):
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+def cli():
     """
-    Função para calcular o wGRR entre um par de contigs.
-
-    Args:
-        gene_counts (dict): dicionário com contigs como chave e
-        total de genes preditos como valor.
-        pair (tuple): par ordenado dos contigs, associado ao valor
-        total da identidade.
-
-    Returns:
-        list: lista contendo o par de contigs e o wGRR calculado
+    Ferramenta de linha de comando para analisar e avaliar os agrupamentos
+    realizados pelo PlasmidEvo.
     """
-    (p_u, p_v), total_identity = pair
-    count_u, count_v = gene_counts.get(p_u), gene_counts.get(p_v)
-    min_genes = min(count_u, count_v)
-    wgrr = total_identity / min_genes
-
-    return [p_u, p_v, wgrr]
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("rbh_file", type=click.Path(exists=True, dir_okay=False))
-@click.argument("count_file", type=click.Path(exists=True, dir_okay=False))
-@click.argument("output_file", type=click.Path())
-def process_wgrr(rbh_file, count_file, output_file):
+@cli.command(name="cgp", help="Usado para comparar pares de genomas.")
+@click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
+def compare_genome_pairs(input_file):
     """
-    Função para processar e calcular o weighted Gene Relatedness
-    Repertoire em um arquivo do DIAMOND pré-filtrado.
-
-    Args:
-        rbh_file (str): arquivo filtrado para conter apenas RBH.
-        count_file (str): arquivo com a contagem de genes por
-        contig.
-        output_file (str): arquivo de saída.
+    Gera um tsv com o número de hits entre dois contigs.
     """
-    with open(count_file, 'r', encoding="utf-8") as count_f:
-        gene_counts = {line.split()[0]: int(line.split()[1]) for line in count_f}
+    df = (
+        pl.scan_csv(
+            input_file,
+            separator="\t",
+            has_header=False,
+            new_columns=["query_gene", "target_gene", "identity", "bitscore"],
+        )
+        .with_columns(
+            query_genome=pl.col("query_gene").str.replace(r"_\d+$", ""),
+            target_genome=pl.col("target_gene").str.replace(r"_\d+$", ""),
+        )
+        .filter(
+            pl.col("query_genome") != pl.col("target_genome"),
+            pl.col("query_gene") != pl.col("target_gene"),
+        )
+        .group_by(
+            pl.concat_arr(pl.col("query_genome"), pl.col("target_genome"))
+            .arr.sort()
+            .arr.to_struct(["genome_1", "genome_2"])
+            .alias("genome_pair")
+        )
+        .agg(pl.len().alias("n_shared_genes"))
+        .unnest("genome_pair")
+        .collect(engine="streaming")
+    )
 
-    sum_hits = defaultdict(float)
-    with open(rbh_file, 'r', encoding="utf-8") as rbh_f:
-        for line in rbh_f:
-            parts = line.split()[:3]
-            qseq_gene_id, sseq_gene_id, identity = parts[0], parts[1], float(parts[2])
-            p_u, p_v = qseq_gene_id.rsplit("_", 1)[0], sseq_gene_id.rsplit("_", 1)[0]
-            pair_key = tuple(sorted((p_u, p_v)))
-            sum_hits[pair_key] += identity
+    return df
 
-    calculate_wgrr_counted = partial(calculate_wgrr, gene_counts)
-    with open(output_file, 'w', encoding="utf-8") as f_out, ThreadPool() as pool:
-        results = pool.imap(calculate_wgrr_counted, sum_hits.items())
-        for row in results:
-            f_out.write(f"{row[0]}\t{row[1]}\t{round(row[2], 4)}\n ")
+
+@cli.command(name="cpm", help="contigs por módulo")
+@click.argument("input_path", type=click.Path(exists=True, dir_okay=False))
+def process_ftree(input_path):
+    """
+    Lê um arquivo .ftree e escreve os contigs encontrados diretamente
+    em um arquivo de saída.
+    """
+    with open(input_path, 'r', encoding="utf-8") as infile:
+        click.echo("Procurando padrões...")
+        line_start_pattern = re.compile(r'^[0-9]+:')
+
+        contigs_per_module = defaultdict(set)
+
+        for line in infile:
+            if not line_start_pattern.match(line):
+                continue
+
+            parts = line.split()
+            module_id = parts[0].split(':')[0]
+            name = parts[2].strip('"')
+            contigs_per_module[module_id].add(name)
+
+    return contigs_per_module
+
+
+def evaluate_modules(count_file, ftree_file, rbh_file):
+    """
+    Calcula uma métrica para cada par de genomas em um módulo.
+
+    A métrica é: hits / (genes_genoma1 + genes_genoma2)
+    """
+    click.echo("Lendo arquivo de contagem de genes...")
+    gene_counts = {}
+    with open(count_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            genome, count = line.strip().split()
+            gene_counts[genome] = int(count)
+
+    click.echo("Contando pares de genomas...")
+    df_hits = compare_genome_pairs(rbh_file)
+
+    click.echo("Processando arquivo .ftree para obter módulos...")
+    contigs_per_module = process_ftree(ftree_file)
+
+    click.echo("Calculando a métrica média para cada módulo...")
+    for module_id, genomes in contigs_per_module.items():
+        if len(genomes) < 2:
+            continue
+
+        module_metrics = []
+        for g1, g2 in combinations(genomes, 2):
+            genome1, genome2 = sorted((g1, g2))
+
+            hits_row = df_hits.filter(
+                (pl.col("genome_1") == genome1) & (pl.col("genome_2") == genome2)
+            )
+
+            if not hits_row.is_empty():
+                hits = hits_row["n_shared_genes"][0]
+                genes_1 = gene_counts.get(genome1, 0)
+                genes_2 = gene_counts.get(genome2, 0)
+
+                denominator = genes_1 + genes_2
+                if denominator > 0:
+                    metric = hits / denominator
+                    module_metrics.append(metric)
+
+        if module_metrics:
+            average_metric = sum(module_metrics) / len(module_metrics)
+            print(f"{module_id}: {average_metric}")
 
 
 if __name__ == "__main__":
-    process_wgrr()
+    cli()

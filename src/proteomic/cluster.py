@@ -32,13 +32,14 @@ def infomap_cluster_data(input_file, output_file, m_time):
         m_time (float): tempo de Markov, usado para
         controlar a granularidade
     """
-    output_name = "f{output_file}_{m_time}"
+    output_name = f"{output_file}_t{m_time}"
     click.echo("Iniciando agrupamento com Infomap...", err=True)
 
     im = Infomap(num_trials=10, two_level=True, out_name=output_name,
                  ftree=True, markov_time=m_time, variable_markov_time=True)
     im.read_file(input_file)
     im.run()
+    im.write_flow_tree(f"{output_name}.ftree")
 
 
 def generate_graph(input_file):
