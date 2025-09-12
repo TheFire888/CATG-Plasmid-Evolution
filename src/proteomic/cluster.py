@@ -8,10 +8,19 @@ import igraph as ig
 from infomap import Infomap
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+def cli():
+    """
+    Ferramenta de linha de comando para clusterizar grafos
+    """
+    pass
+
+
+@cli.command(name="infomap", help="Utiliza o algoritmo Infomap")
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
-def infomap_cluster_data(input_file, output_file):
+@click.option("--m-time", default=5)
+def infomap_cluster_data(input_file, output_file, m_time):
     """
     Aplica o algoritmo do Infomap 10 vezes para encontrar
     agrupamentos em um grafo.
@@ -20,19 +29,15 @@ def infomap_cluster_data(input_file, output_file):
         input_file (str): arquivo Pajek de entrada.
         output_file (str): arquivo de saída com os
         agrupamentos encontrados
+        m_time (float): tempo de Markov, usado para
+        controlar a granularidade
     """
+    output_name = "f{output_file}_{m_time}"
 
-    im = Infomap(num_trials=10)
+    im = Infomap(num_trials=10, two_level=True, out_name=output_name,
+                 ftree=True, markov_time=m_time, variable_markov_time=True)
     im.read_file(input_file)
     im.run()
-
-    with open(output_file + ".label", 'w', encoding="utf-8") as f:
-        for node in im.tree:
-            if node.is_leaf:
-                node_name = im.get_name(node.node_id)
-                f.write(f"{node_name},{node.node_id}\n")
-
-    im.write_newick(output_file)
 
 
 def generate_graph(input_file):
@@ -50,7 +55,7 @@ def generate_graph(input_file):
     return g
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@cli.command(name="leiden", help="Utiliza o algoritmo Infomap")
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
 def leiden_cluster_data(input_file, output_file):
@@ -78,5 +83,4 @@ def leiden_cluster_data(input_file, output_file):
 
 
 if __name__ == "__main__":
-    # infomap_cluster_data()
-    leiden_cluster_data()
+    cli()
