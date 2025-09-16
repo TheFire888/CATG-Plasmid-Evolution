@@ -5,6 +5,7 @@ e avaliar agrupamentos realizados pelo PlasmidEvo.
 import re
 from collections import defaultdict
 from itertools import combinations
+from multiprocessing.pool import ThreadPool
 import click
 import polars as pl
 
@@ -17,11 +18,9 @@ def cli():
     """
 
 
-@cli.command(name="cgp", help="Usado para comparar pares de genomas.")
-@click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 def compare_genome_pairs(input_file):
     """
-    Gera um tsv com o número de hits entre dois contigs.
+    Gera um dataframe com o número de hits entre dois contigs.
     """
     df = (
         pl.scan_csv(
@@ -52,29 +51,34 @@ def compare_genome_pairs(input_file):
     return df
 
 
-@cli.command(name="cpm", help="Usado para determinar contigs por módulo")
-@click.argument("input_path", type=click.Path(exists=True, dir_okay=False))
-def process_ftree(input_path):
+def process_ftree(input_file):
     """
-    Lê um arquivo .ftree e escreve os contigs encontrados diretamente
-    em um arquivo de saída.
+    Gera um dataframe com a relação entre os contigs e os módulos em um arquivo .ftree
     """
-    with open(input_path, 'r', encoding="utf-8") as infile:
+    with open(input_file, 'r', encoding="utf-8") as f_in:
         click.echo("Procurando padrões...")
         line_start_pattern = re.compile(r'^[0-9]+:')
 
-        contigs_per_module = defaultdict(set)
+        contigs = []
+        modules = []
 
-        for line in infile:
+        for line in f_in:
             if not line_start_pattern.match(line):
                 continue
 
             parts = line.split()
             module_id = parts[0].split(':')[0]
-            name = parts[2].strip('"')
-            contigs_per_module[module_id].add(name)
+            contig_name = parts[2].strip('"')
+            
+            modules.append(module_id)
+            contigs.append(contig_name)
 
-    return contigs_per_module
+        data = {
+                "contig": contigs,
+                "module_id": modules
+                }
+
+        return pl.DataFrame(data)
 
 
 @cli.command(name="eval", help="Usado para determinar a qualidade dos módulos")
