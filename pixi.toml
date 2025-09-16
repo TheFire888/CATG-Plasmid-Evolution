@@ -26,6 +26,7 @@ igraph = ">=0.10.16,<0.11"
 python-igraph = ">=0.11.9,<0.12"
 pycairo = ">=1.28.0,<2"
 leidenalg = ">=0.10.2,<0.11"
+jupyter_console = ">=6.6.3,<7"
 
 [pypi-dependencies]
 infomap = ">=2.8.0, <3"

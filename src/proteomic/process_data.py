@@ -59,7 +59,7 @@ def process_ftree(input_file):
         click.echo("Procurando padrões...")
         line_start_pattern = re.compile(r'^[0-9]+:')
 
-        contigs = []
+        nodes = []
         modules = []
 
         for line in f_in:
@@ -68,17 +68,27 @@ def process_ftree(input_file):
 
             parts = line.split()
             module_id = parts[0].split(':')[0]
-            contig_name = parts[2].strip('"')
-            
+            node_name = parts[2].strip('"')
+
             modules.append(module_id)
-            contigs.append(contig_name)
+            nodes.append(node_name)
 
         data = {
-                "contig": contigs,
+                "node": nodes,
                 "module_id": modules
-                }
+               }
 
-        return pl.DataFrame(data)
+        df = (
+                pl.DataFrame(data)
+                .with_columns(
+                    pl.when(pl.col("node").str.contains("_"))
+                    .then(pl.lit("gene"))
+                    .otherwise(pl.lit("contig"))
+                    .alias("type")
+                )
+            )
+
+        return df
 
 
 @cli.command(name="eval", help="Usado para determinar a qualidade dos módulos")
