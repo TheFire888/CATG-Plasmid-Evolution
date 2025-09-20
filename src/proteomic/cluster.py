@@ -13,7 +13,21 @@ def cli():
     """
     Ferramenta de linha de comando para clusterizar grafos
     """
-    pass
+
+
+def generate_graph(input_file):
+    """
+    Gera um grafo baseado no arquivo de entrada (formato ncol)
+
+    Args:
+        input_file (str): arquivo de entrada, formato ncol.
+    Returns:
+        graph: objeto de grafo gerado a partir do arquivo de entrada.
+
+    """
+    g = ig.Graph.Load(input_file, format="ncol")
+    g.to_undirected(mode="each")
+    return g
 
 
 @cli.command(name="infomap", help="Utiliza o algoritmo Infomap")
@@ -42,22 +56,8 @@ def infomap_cluster_data(input_file, output_file, m_time):
     im.write_flow_tree(f"{output_name}.ftree")
 
 
-def generate_graph(input_file):
-    """
-    Gera um grafo baseado no arquivo de entrada (formato ncol)
-
-    Args:
-        input_file (str): arquivo de entrada, formato ncol.
-    Returns:
-        graph: objeto de grafo gerado a partir do arquivo de entrada.
-
-    """
-    g = ig.Graph.Load(input_file, format="ncol")
-    g.to_undirected(mode="each")
-    return g
-
-
-@cli.command(name="leiden", help="Utiliza o algoritmo Infomap")
+# TODO: Adicionar a biblioteca do leidenalg para clusterizar com Leiden
+@cli.command(name="leiden", help="Utiliza o algoritmo Leiden")
 @click.argument("input_file", type=click.Path(exists=True, dir_okay=False))
 @click.argument("output_file", type=click.Path())
 def leiden_cluster_data(input_file, output_file):

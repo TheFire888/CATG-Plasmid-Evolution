@@ -1,0 +1,12 @@
+[project]
+name = "plasmidEvo"
+version = "0.1.0"
+
+[project.scripts]
+plasmid-evo = "plasmidEvo.cli:cli"
+
+[tool.pylint]
+init-hook='import sys; sys.path.append(".")'
+
+[tool.setuptools]
+packages = ["plasmidEvo"]
