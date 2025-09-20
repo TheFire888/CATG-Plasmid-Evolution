@@ -3,6 +3,9 @@
 # Esse nome vai aparecer na execução do squeue
 #SBATCH --job-name=<job-name>
 
+# Escolha a partição adequada ao trabalho
+#SBATCH --partition=max50
+
 # Esse é o número de processos
 #SBATCH --ntasks=1
 

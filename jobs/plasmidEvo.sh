@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=plasmidEvo
+#SBATCH --partition=max50
 #SBATCH --ntasks=1
-#SBATCH --mem=32GB
-#SBATCH --cpus-per-task=8
+#SBATCH --mem=64GB
+#SBATCH --cpus-per-task=16
 #SBATCH --time=32:00:00
 #SBATCH --output=out/plasmidEvo%j.out
 #SBATCH --error=err/plasmidEvo%j.err
