@@ -86,6 +86,7 @@ class DiamondAligner:
         print("Executando a busca DIAMOND blastp...")
         blastp_cmd = [
             "diamond", "blastp",
+            "--quiet",
             "-q", str(protein_path),
             "-d", str(db_path),
             "-o", str(output_tsv_path),

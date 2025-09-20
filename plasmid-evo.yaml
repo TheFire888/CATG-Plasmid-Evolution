@@ -4,7 +4,7 @@ predictor_params:
 
 # Configurações para o alinhador DIAMOND
 aligner_params:
-  max_target_seqs: 1000
+  max_target_seqs: 8000
   query_cover: 75
   subject_cover: 75
   min_score: 30
