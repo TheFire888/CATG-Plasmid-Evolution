@@ -69,8 +69,8 @@ class RBHFilter:
               open(output_path, "w", encoding="utf-8") as f_out
               ):
             for line in f_in:
-                parts = line.split()
-                qseq_gene_id, sseq_gene_id = parts[0], parts[1]
+                line_parts = line.split()
+                qseq_gene_id, sseq_gene_id = line_parts[0], line_parts[1]
 
                 qseq_contig = self._get_contig_from_gene(qseq_gene_id)
                 sseq_contig = self._get_contig_from_gene(sseq_gene_id)

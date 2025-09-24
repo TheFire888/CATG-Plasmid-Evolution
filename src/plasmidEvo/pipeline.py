@@ -29,6 +29,7 @@ class PlasmidEvoPipeline:
         self.clusterer = GeneClusterer(config.get('clusterer_params', {}))
         # self.analyzer = AnalysisEngine()
 
+    # TODO: Adicionar "resume"
     def run(self, input_fasta: str, output_dir: str) -> None:
         """
         Executa a sequência completa de análise.

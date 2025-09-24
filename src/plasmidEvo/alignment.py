@@ -45,6 +45,7 @@ class DiamondAligner:
         self.threads = params.get("threads", 4)
         self.out_columns = ["qseqid", "sseqid", "pident", "bitscore"]
         self.out_format = ["6"] + self.out_columns
+        # TODO: Adicionar parâmetro de sensibilidade
 
     def _run_command(self, command: list):
         """
