@@ -85,7 +85,9 @@ class ProteinPredictor:
                     header = (
                         f">{seq_id}_{i} "
                         f"strand={gene.strand} start={gene.begin} "
-                        f"end={gene.end}"
+                        f"end={gene.end} "
+                        f"partial_begin={int(gene.partial_begin)} "
+                        f"partial_end={int(gene.partial_end)}"
                     )
                     f_out.write(header + "\n")
                     f_out.write(gene.translate(include_stop=False) + "\n")
