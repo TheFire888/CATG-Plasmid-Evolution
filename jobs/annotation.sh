@@ -98,6 +98,6 @@ interproscan \
     --input "./test/4267.24-09-2025_14\:09\:34/proteins.faa" \
     --applications Pfam,NCBIfam,CDD,HAMAP \
     --iprlookup --goterms --pathways \
-    --data-dir interproscan-5.75-106.0 \
+    --data-dir "data/interproscan-5.75-106.0" \
     --cpu 16 \
     --output-dir "./lab/4267/annotations" \
