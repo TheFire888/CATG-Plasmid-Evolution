@@ -13,8 +13,6 @@ export PATH="/home/lleal/.pixi/bin:$PATH"
 
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
-cd "$SLURM_SUBMIT_DIR/.."
-
 interproscan \
     --input "./test/4267.24-09-2025_14\:09\:34/proteins.faa" \
     --applications Pfam,NCBIfam,CDD,HAMAP \
