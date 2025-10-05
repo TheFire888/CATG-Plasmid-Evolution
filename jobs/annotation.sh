@@ -6,8 +6,8 @@
 #SBATCH --mem=60GB
 #SBATCH --cpus-per-task=16
 #SBATCH --time=32:00:00
-#SBATCH --output=../out/annotation%j.out
-#SBATCH --error=../err/annotation%j.err
+#SBATCH --output=out/annotation%j.out
+#SBATCH --error=err/annotation%j.err
 
 export PATH="/home/lleal/.pixi/bin:$PATH"
 
