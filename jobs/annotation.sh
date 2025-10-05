@@ -95,9 +95,9 @@ export PATH="/home/lleal/.pixi/bin:$PATH"
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
 interproscan \
-    --input "./test/4267.24-09-2025_14\:09\:34/proteins.faa" \
+    --input test/4267.24-09-2025_14\:09\:34/proteins.faa \
     --applications Pfam,NCBIfam,CDD,HAMAP \
     --iprlookup --goterms --pathways \
-    --data-dir "data/interproscan-5.75-106.0" \
+    --data-dir data/interproscan-5.75-106.0 \
     --cpu 16 \
-    --output-dir "./lab/4267/annotations" \
+    --output-dir lab/4267/annotations \
