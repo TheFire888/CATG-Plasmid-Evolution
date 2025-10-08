@@ -27,6 +27,7 @@ leidenalg = ">=0.10.2,<0.11"
 jupyter_console = ">=6.6.3,<7"
 infomap = ">=2.8.0, <3"
 pyyaml = ">=6.0.2,<7"
+graph-tool = ">=2.98,<3"
 
 [tasks]
 build = "pip install -e ./src"
