@@ -44,7 +44,7 @@ class GeneGraph:
         with open(input_path, 'r', newline='', encoding="utf-8") as file:
             reader = csv.reader(file, delimiter='\t')
             for row in reader:
-                if len(row) >= 4 and row[0] == row[1]:
+                if row[0] == row[1]:
                     try:
                         autohits[row[0]] = float(row[3])
                     except ValueError:
@@ -120,6 +120,34 @@ class GeneGraph:
                             except KeyError:
                                 continue
 
+    def _write_ncol(self, input_path: Path, output_dir: Path):
+        output_file = output_dir / "graph.ncol"
+        autohits = self._collect_autohits(input_path)
+        contig_genes_edges = set()
+        with (
+                open(input_path, 'r', encoding="utf-8") as tsv_file,
+                open(output_file, 'w', encoding="utf-8") as ncol_file
+                ):
+            reader = csv.reader(tsv_file, delimiter='\t')
+            for row in reader:
+                qseq_gene_id, sseq_gene_id = row[0], row[1]
+                bitscore = float(row[3])
+                qseq_contig = qseq_gene_id.rsplit("_", 1)[0]
+
+                if qseq_gene_id != sseq_gene_id:
+                    try:
+                        weight = bitscore / autohits[qseq_gene_id]
+                        ncol_file.write(f"{qseq_gene_id}\t{sseq_gene_id}\t{weight}\n")
+                    except KeyError:
+                        print(f"Aviso: Autohit não encontrado para {qseq_gene_id}. Ignorando a aresta.")
+                        continue
+
+                qedge = (qseq_contig, qseq_gene_id)
+                if qedge not in contig_genes_edges:
+                    ncol_file.write(f"{qseq_contig}\t{qseq_gene_id}\t1.0\n")
+                    contig_genes_edges.add(qedge)
+
+
     def generate(self, output_dir: Path,
                  file_format: str = "pajek") -> Path:
         """
@@ -129,7 +157,7 @@ class GeneGraph:
             input_file (str): Caminho para o arquivo de
                               entrada com os hits (RBH).
             output_dir (Path): Diretório para salvar o arquivo de saída.
-            format (str): O formato do arquivo de saída ('pajek' ou 'ncol').
+            file_format (str): O formato do arquivo de saída ('pajek' ou 'ncol').
 
         Returns:
             Path: O caminho para o arquivo de grafo gerado.
@@ -141,6 +169,9 @@ class GeneGraph:
             case "pajek":
                 output_path = output_dir / "graph.net"
                 self._write_pajek(input_path, output_dir)
+            case "ncol":
+                output_path = output_dir / "graph.ncol"
+                self._write_ncol(input_path, output_dir)
             case _:
                 raise ValueError(f"Formato de saída desconhecido: "
                                  f"'{file_format}'. "
