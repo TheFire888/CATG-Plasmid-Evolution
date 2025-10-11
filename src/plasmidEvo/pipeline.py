@@ -8,7 +8,7 @@ from plasmidEvo.alignment import DiamondAligner
 from plasmidEvo.filtering import RBHFilter
 from plasmidEvo.graph import GeneGraph
 from plasmidEvo.clustering import GeneClusterer
-# from .analysis import AnalysisEngine
+from plasmidEvo.analysis import AnalysisEngine
 
 
 class PlasmidEvoPipeline:
@@ -27,7 +27,7 @@ class PlasmidEvoPipeline:
         self.rbh_filter = RBHFilter(config.get('filter_params', {}))
         self.graph_builder = GeneGraph()
         self.clusterer = GeneClusterer(config.get('clusterer_params', {}))
-        # self.analyzer = AnalysisEngine()
+        self.analyzer = AnalysisEngine()
 
     # TODO: Adicionar "resume"
     def run(self, input_fasta: str, output_dir: str) -> None:
@@ -47,7 +47,7 @@ class PlasmidEvoPipeline:
         self.rbh_filter.diamond_filter(output_path)
         self.graph_builder.generate(output_path)
         self.clusterer.cluster(output_path)
-        # self.analyzer.generate_report(output_path)
+        self.analyzer.generate_report(output_path)
 
         print("--- Pipeline concluída. "
               f"Resultados salvos em {output_path} ---")
