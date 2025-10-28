@@ -14,7 +14,7 @@ class DiamondAligner:
 
     Esta classe gerencia a criação do banco de dados DIAMOND a partir de
     um arquivo de proteínas, executa a busca `blastp` e carrega os
-    resultados em um DataFrame do pandas.
+    dados.
     """
 
     def __init__(self, params: dict = None):

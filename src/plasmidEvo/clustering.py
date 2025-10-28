@@ -6,6 +6,7 @@ coisas biológicas legais e tals :3
 from pathlib import Path
 from infomap import Infomap
 
+
 class GeneClusterer:
     def __init__(self, params: dict = None):
         """
@@ -27,6 +28,9 @@ class GeneClusterer:
         """
         Aplica o algoritmo do Infomap para encontrar os agrupamentos
         no grafo
+
+        Args:
+            output_dir (Path): Diretório onde o arquivo de saída será salvo.
         """
         input_path = str(output_dir / "graph.net")
         output_name = str(output_dir

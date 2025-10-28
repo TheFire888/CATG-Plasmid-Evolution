@@ -7,11 +7,20 @@ import subprocess
 import shutil
 import re
 from pathlib import Path
+import os
 
 import polars as pl
 
 
 class AnalysisEngine:
+    """
+    Executa as análises necessárias para gerar um relatório da
+    hierarquia.
+
+    Esta classe gerencia a criação do banco de dados a partir dos
+    valores gerados pelos passos anteriores.
+    """
+
     def __init__(self, params: dict = None):
         if not shutil.which("apptainer"):
             raise FileNotFoundError("O executável 'apptainer' não foi "
@@ -42,7 +51,8 @@ class AnalysisEngine:
 
     def annotate_genes(self, output_dir: Path) -> None:
         """
-        Realiza a anotação dos genes preditos
+        Realiza a anotação dos genes preditos e salva os resultados
+        no diretório de saída.
 
         Args:
             output_dir (Path): O objeto Path do diretório de saída.
@@ -51,16 +61,37 @@ class AnalysisEngine:
         protein_path = output_dir / "proteins.faa"
         output_annotations_path = output_dir / "annotations"
 
-        annotation_cmd = ["interproscan",
-                          "--input", str(protein_path),
-                          "--applications", str(self.applications),
-                          "--iprlookup --goterms --pathways",
-                          "--data-dir", str(self.data_dir),
-                          "--cpu", str(self.num_cpu),
-                          "--outṕut-dir", str(output_annotations_path)
-                          ]
-        self._run_command(annotation_cmd)
+        sif_path = (Path(os.path.expanduser("~"))
+                    / "images"
+                    / "interproscan.sif"
+                    )
 
+        data_bind_host = self.data_dir / "data"
+        data_bind_container = "/opt/interproscan/data"
+        bind_mount = f"{data_bind_host}:{data_bind_container}"
+
+        output_annotations_path.mkdir(parents=True, exist_ok=True)
+
+        interpro_args = [
+            "/opt/interproscan/interproscan.sh",
+            "--input", str(protein_path),
+            "--applications", str(self.applications),
+            "--iprlookup",
+            "--goterms",
+            "--pathways",
+            "--cpu", str(self.num_cpu),
+            "--output-dir", str(output_annotations_path)
+        ]
+
+        annotation_cmd = [
+            "apptainer",
+            "--silent",
+            "exec",
+            "-B", bind_mount,
+            str(sif_path),
+        ] + interpro_args
+
+        self._run_command(annotation_cmd)
 
     def convert_flow_tree_to_lazyframe(self, output_dir: Path) -> None:
         """
@@ -68,10 +99,10 @@ class AnalysisEngine:
         de dados rico em informação.
         """
         ftree_file = output_dir / 'clustered_graph_5.ftree'
-        
+
         # TODO: Continue a partir daqui !!!
 
-        with open(input_file, 'r', encoding="utf-8") as f_in:
+        with open(ftree_file, 'r', encoding="utf-8") as f_in:
             modules = []
             flow = []
             nodes = []

@@ -147,7 +147,6 @@ class GeneGraph:
                     ncol_file.write(f"{qseq_contig}\t{qseq_gene_id}\t1.0\n")
                     contig_genes_edges.add(qedge)
 
-
     def generate(self, output_dir: Path,
                  file_format: str = "pajek") -> Path:
         """
