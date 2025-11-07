@@ -1,10 +1,10 @@
 [project]
-name = "plasmidEvo"
+name = "plasmid-evo"
 version = "0.1.0"
 
 [project.scripts]
-plasmid-evo = "plasmidEvo.cli:cli"
+plasmid-evo = "plasmid-evo.cli:cli"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["plasmidEvo"]
+packages = ["plasmid-evo"]
