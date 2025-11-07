@@ -29,4 +29,4 @@ graph-tool = ">=2.98,<3"
 ijson = ">=3.4.0.post0,<4"
 
 [tasks]
-build = "pip install -e ./src"
+build = "pip install -e ."
