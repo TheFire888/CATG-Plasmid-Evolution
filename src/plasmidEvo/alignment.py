@@ -17,7 +17,7 @@ class DiamondAligner:
     dados.
     """
 
-    def __init__(self, params: dict = None):
+    def __init__(self, params: dict = {}):
         """
         Inicializa o alinhador com parâmetros configuráveis.
 
@@ -34,9 +34,6 @@ class DiamondAligner:
         if not shutil.which("diamond"):
             raise FileNotFoundError("O executável 'diamond' não foi "
                                     "encontrado no PATH.")
-
-        if params is None:
-            params = {}
 
         self.max_target_seqs = params.get("max_target_seqs", 1000)
         self.query_cover = params.get("query_cover", 75)
