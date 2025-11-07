@@ -19,8 +19,8 @@
 #SBATCH --time=32:00:00
 
 # Esses são os arquivos de saída do StdOut e do StdErr, respectivamente
-#SBATCH --output=../out/<file>.out
-#SBATCH --error=../err/<file>.err
+#SBATCH --output=out/<file>%j.out
+#SBATCH --error=err/<file>%j.err
 
 export PATH="/home/lleal/.pixi/bin:$PATH"
 
