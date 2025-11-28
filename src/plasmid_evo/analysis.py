@@ -64,7 +64,7 @@ class AnalysisEngine:
 
             return processed_lf
 
-    def generate_db(output_path: Path, markov_time: float):
+    def generate_db(self, output_path: Path, markov_time: float):
         ftree_file = output_path / f"clustered_graph_{markov_time}.ftree"
         output_file = output_path / f"database_{markov_time}.ftree"
 
