@@ -68,7 +68,7 @@ class AnalysisEngine:
         ftree_file = output_path / f"clustered_graph_{markov_time}.ftree"
         output_file = output_path / f"database_{markov_time}.ftree"
 
-        infomap_lf = self.convert_flow_tree_to_lazyframe(ftree_file, markov_time)
+        infomap_lf = self.convert_flow_tree_to_lazyframe(output_path, markov_time)
         genes_lf = (
             infomap_lf.filter(pl.col("type") == "gene")
             .rename(
