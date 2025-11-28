@@ -3,12 +3,12 @@ Este módulo realiza toda a pipeline necessária para o plasmidEvo
 """
 from pathlib import Path
 
-from plasmidEvo.prediction import ProteinPredictor
-from plasmidEvo.alignment import DiamondAligner
-from plasmidEvo.filtering import RBHFilter
-from plasmidEvo.graph import GeneGraph
-from plasmidEvo.clustering import GeneClusterer
-from plasmidEvo.analysis import AnalysisEngine
+from plasmid_evo.prediction import ProteinPredictor
+from plasmid_evo.alignment import DiamondAligner
+from plasmid_evo.filtering import RBHFilter
+from plasmid_evo.graph import GeneGraph
+from plasmid_evo.clustering import GeneClusterer
+from plasmid_evo.analysis import AnalysisEngine
 
 
 class PlasmidEvoPipeline:

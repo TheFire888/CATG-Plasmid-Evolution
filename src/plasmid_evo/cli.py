@@ -5,7 +5,7 @@ from pathlib import Path
 import tomllib
 import click
 
-from plasmidEvo.pipeline import PlasmidEvoPipeline
+from plasmid_evo.pipeline import PlasmidEvoPipeline
 
 
 def _load_config(config_path) -> dict:
