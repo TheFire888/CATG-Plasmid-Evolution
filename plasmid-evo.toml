@@ -12,7 +12,7 @@
 
 # Parâmetros para o filtro de RBH
 [filter_params]
-  meta = True
+  meta = true
   threads = 8
 
 # Parâmetros para o agrupador
