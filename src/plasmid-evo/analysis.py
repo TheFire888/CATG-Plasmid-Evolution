@@ -22,98 +22,28 @@ class AnalysisEngine:
     """
 
     def __init__(self, params: dict = None):
-        if not shutil.which("apptainer"):
-            raise FileNotFoundError("O executável 'apptainer' não foi "
-                                    "encontrado no PATH.")
-
         if params is None:
             params = {}
 
-        self.applications = params.get("applications",
-                                       "Pfam,NCBIfam,CDD,HAMAP")
-        self.data_dir = params.get("data_dir")
-        self.num_cpu = params.get("num_cpu", 16)
-
-    def _run_command(self, command: list):
-        """
-        (Método privado) Executa um comando de subprocesso
-        e lida com erros.
-        """
-        try:
-            subprocess.run(
-                command, check=True, capture_output=True,
-                text=True, encoding="utf-8"
-            )
-        except subprocess.CalledProcessError as e:
-            print(f"Erro ao executar o comando: {' '.join(command)}")
-            print(f"Stderr: {e.stderr}")
-            raise
-
-    def annotate_genes(self, output_dir: Path) -> None:
-        """
-        Realiza a anotação dos genes preditos e salva os resultados
-        no diretório de saída.
-
-        Args:
-            output_dir (Path): O objeto Path do diretório de saída.
-        """
-        print("--- Iniciando anotação dos genes ---")
-        protein_path = output_dir / "proteins.faa"
-        output_annotations_path = output_dir / "annotations"
-
-        sif_path = (Path(os.path.expanduser("~"))
-                    / "images"
-                    / "interproscan.sif"
-                    )
-
-        data_bind_host = self.data_dir / "data"
-        data_bind_container = "/opt/interproscan/data"
-        bind_mount = f"{data_bind_host}:{data_bind_container}"
-
-        output_annotations_path.mkdir(parents=True, exist_ok=True)
-
-        interpro_args = [
-            "/opt/interproscan/interproscan.sh",
-            "--input", str(protein_path),
-            "--applications", str(self.applications),
-            "--iprlookup",
-            "--goterms",
-            "--pathways",
-            "--cpu", str(self.num_cpu),
-            "--output-dir", str(output_annotations_path)
-        ]
-
-        annotation_cmd = [
-            "apptainer",
-            "--silent",
-            "exec",
-            "-B", bind_mount,
-            str(sif_path),
-        ] + interpro_args
-
-        self._run_command(annotation_cmd)
-
-    def convert_flow_tree_to_lazyframe(self, output_dir: Path) -> None:
+    def convert_flow_tree_to_lazyframe(self, output_dir: Path, markov_time: float) -> None:
         """
         Converte um arquivo de saída do Infomap, .ftree, para um banco
         de dados rico em informação.
         """
-        ftree_file = output_dir / 'clustered_graph_5.ftree'
+        ftree_file = output_dir / f"clustered_graph_{markov_time}.ftree"
 
-        # TODO: Continue a partir daqui !!!
-
-        with open(ftree_file, 'r', encoding="utf-8") as f_in:
+        with open(ftree_file, "r", encoding="utf-8") as f_in:
             modules = []
             flow = []
             nodes = []
 
-            line_start = re.compile(r'^[0-9]+:')
+            line_start = re.compile(r"^[0-9]+:")
 
             for line in f_in:
                 if not line_start.match(line):
                     continue
                 line_parts = line.split()
-                module_id = int(line_parts[0].split(':')[0])
+                module_id = int(line_parts[0].split(":")[0])
                 node_flow = float(line_parts[1])
                 node_name = line_parts[2].strip('"')
 
@@ -121,11 +51,7 @@ class AnalysisEngine:
                 flow.append(node_flow)
                 nodes.append(node_name)
 
-            data = {
-                    "module_id": modules,
-                    "node_flow": flow,
-                    "node_name": nodes
-                    }
+            data = {"module_id": modules, "node_flow": flow, "node_name": nodes}
             raw_lf = pl.LazyFrame(data)
 
             processed_lf = raw_lf.with_columns(
@@ -133,6 +59,54 @@ class AnalysisEngine:
                 .then(pl.lit("gene"))
                 .otherwise(pl.lit("contig"))
                 .alias("type")
-                .cast(pl.Categorical))
+                .cast(pl.Categorical)
+            )
 
             return processed_lf
+
+    def generate_db(output_path: Path, markov_time: float):
+        ftree_file = output_path / f"clustered_graph_{markov_time}.ftree"
+        output_file = output_path / f"database_{markov_time}.ftree"
+
+        infomap_lf = convert_flow_tree_to_lazyframe(ftree_file, markov_time)
+        genes_lf = (
+            infomap_lf.filter(pl.col("type") == "gene")
+            .rename(
+                {
+                    "module_id": "gene_module",
+                    "node_name": "gene",
+                    "node_flow": "gene_flow",
+                }
+            )
+            .select(["gene", "gene_module", "gene_flow"])
+            .with_columns(pl.col("gene_module").cast(pl.Int64))
+        )
+        contig_lf = (
+            infomap_lf.filter(pl.col("type") == "contig")
+            .rename(
+                {
+                    "module_id": "plasmid_module",
+                    "node_name": "plasmid",
+                    "node_flow": "plasmid_flow",
+                }
+            )
+            .select(["plasmid", "plasmid_module", "plasmid_flow"])
+            .with_columns(
+                pl.col("plasmid_module").cast(pl.Int64),
+                pl.col("plasmid").cast(pl.Categorical),
+            )
+        )
+
+        db_lf = (
+            genes_lf.with_columns(
+                pl.col("gene")
+                .str.split("_")
+                .list.first()
+                .alias("plasmid")
+                .cast(pl.Categorical)
+            )
+            .join(contig_lf, left_on="plasmid", right_on="plasmid", how="inner")
+            .select(["plasmid", "gene", "plasmid_module", "gene_module"])
+        )
+
+        db_lf.sink_csv(output_file, separator='\t')

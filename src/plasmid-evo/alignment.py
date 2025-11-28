@@ -88,7 +88,7 @@ class DiamondAligner:
             "-q", str(protein_path),
             "-d", str(db_path),
             "-o", str(output_tsv_path),
-            "--very-sensitive",
+            "--sensitive",
             "--outfmt", *self.out_format,
             "--max-target-seqs", str(self.max_target_seqs),
             "--query-cover", str(self.query_cover),

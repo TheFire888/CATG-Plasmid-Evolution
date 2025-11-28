@@ -20,11 +20,10 @@ class GeneClusterer:
             params = {}
         # Futuros parâmetros podem ser adicionados aqui.
 
-        self.markov_time = params.get("markov_time", 5)
         self.num_trials = params.get("num_trials", 10)
         self.variable_markov_time = params.get("variable_markov_time", True)
 
-    def cluster(self, output_dir: Path):
+    def cluster(self, output_dir: Path, markov_time: float):
         """
         Aplica o algoritmo do Infomap para encontrar os agrupamentos
         no grafo
@@ -34,12 +33,12 @@ class GeneClusterer:
         """
         input_path = str(output_dir / "graph.net")
         output_name = str(output_dir
-                          / f"clustered_graph_{self.markov_time}.ftree")
+                          / f"clustered_graph_{markov_time}.ftree")
         print("Iniciando agrupamento...")
         im = Infomap(two_level=True,
                      num_trials=self.num_trials,
                      out_name=output_name,
-                     markov_time=self.markov_time,
+                     markov_time=markov_time,
                      variable_markov_time=self.variable_markov_time)
         im.read_file(input_path)
         im.run()
