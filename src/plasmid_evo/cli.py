@@ -12,7 +12,7 @@ def _load_config(config_path) -> dict:
     """
     Carrega um arquivo de configuração TOML e o retorna como um dicionário.
     """
-    with open(config_path, 'r', encoding="utf-8") as file:
+    with open(config_path, 'rb', encoding="utf-8") as file:
         return tomllib.load(file)
 
 
