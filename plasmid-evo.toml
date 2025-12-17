@@ -17,3 +17,4 @@
 
 # Parâmetros para o agrupador
 [clusterer_params]
+  num_trials = 3
