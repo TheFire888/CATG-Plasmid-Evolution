@@ -8,7 +8,7 @@ logging.basicConfig(
         datefmt="%Y-%m-%d %H:%M",
         )
 
-data_dir = Path('../../test/6790.17-12-2025_10:51:03')
+data_dir = Path('test/6790.17-12-2025_10:51:03')
 gt_file = data_dir / 'graph.gt.gz'
 betweenness_file = data_dir / 'betweenness.tsv'
 
