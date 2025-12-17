@@ -2,8 +2,8 @@
 #SBATCH --job-name=betweenness
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
-#SBATCH --mem=64GB
-#SBATCH --cpus-per-task=16
+#SBATCH --mem=128GB
+#SBATCH --cpus-per-task=32
 #SBATCH --time=32:00:00
 #SBATCH --output=out/betweenness%j.out
 #SBATCH --error=err/betweenness%j.err
