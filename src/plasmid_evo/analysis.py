@@ -8,6 +8,13 @@ import shutil
 import re
 from pathlib import Path
 import os
+import logging
+logging.basicConfig(
+        level=logging.DEBUG,
+        format="{asctime} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+        )
 
 import polars as pl
 

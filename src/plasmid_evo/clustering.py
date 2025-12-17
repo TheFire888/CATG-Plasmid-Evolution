@@ -5,7 +5,13 @@ coisas biológicas legais e tals :3
 
 from pathlib import Path
 from infomap import Infomap
-
+import logging
+logging.basicConfig(
+        level=logging.DEBUG,
+        format="{asctime} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+        )
 
 class GeneClusterer:
     def __init__(self, params: dict = None):
@@ -34,7 +40,7 @@ class GeneClusterer:
         input_path = str(output_dir / "graph.net")
         output_name = str(output_dir
                           / f"clustered_graph_{markov_time}.ftree")
-        print("Iniciando agrupamento...")
+        logging.info("Iniciando agrupamento...")
         im = Infomap(two_level=True,
                      num_trials=self.num_trials,
                      out_name=output_name,

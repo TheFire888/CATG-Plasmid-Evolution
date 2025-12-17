@@ -6,7 +6,13 @@ usando a ferramenta DIAMOND.
 import subprocess
 import shutil
 from pathlib import Path
-
+import logging
+logging.basicConfig(
+        level=logging.DEBUG,
+        format="{asctime} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+        )
 
 class DiamondAligner:
     """
@@ -55,8 +61,8 @@ class DiamondAligner:
                 text=True, encoding="utf-8"
             )
         except subprocess.CalledProcessError as e:
-            print(f"Erro ao executar o comando: {' '.join(command)}")
-            print(f"Stderr: {e.stderr}")
+            logging.error(f"Erro ao executar o comando: {' '.join(command)}")
+            logging.error(f"Stderr: {e.stderr}")
             raise
 
     def align(self, output_dir: Path) -> None:
@@ -66,13 +72,13 @@ class DiamondAligner:
         Args:
             output_dir (Path): O objeto Path do diretório de saída.
         """
-        print("--- Iniciando alinhamento all-versus-all com DIAMOND ---")
+        logging.info("Iniciando alinhamento all-versus-all com DIAMOND")
         protein_path = output_dir / "proteins.faa"
         db_path = output_dir / f"{protein_path.stem}.dmnd"
         output_tsv_path = output_dir / "diamond_results.tsv"
 
         # Etapa 1: Criar o banco de dados DIAMOND
-        print(f"Criando banco de dados DIAMOND em: {db_path}")
+        logging.info(f"Criando banco de dados DIAMOND em: {db_path}")
         makedb_cmd = [
             "diamond", "makedb",
             "--in", str(protein_path),
@@ -81,7 +87,7 @@ class DiamondAligner:
         self._run_command(makedb_cmd)
 
         # Etapa 2: Executar a busca BLASTp
-        print("Executando a busca DIAMOND blastp...")
+        logging.info("Executando a busca DIAMOND blastp...")
         blastp_cmd = [
             "diamond", "blastp",
             "--quiet",
@@ -98,7 +104,7 @@ class DiamondAligner:
         ]
         self._run_command(blastp_cmd)
 
-        print("Alinhamento concluído.")
+        logging.info("Alinhamento concluído.")
 
 
 if __name__ == "__main__":

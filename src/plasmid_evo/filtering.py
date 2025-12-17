@@ -4,6 +4,14 @@ a partir de um arquivo de resultados de alinhamento do DIAMOND.
 """
 
 from pathlib import Path
+import logging
+logging.basicConfig(
+        level=logging.DEBUG,
+        format="{asctime} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+        )
+
 import polars as pl
 
 
@@ -36,7 +44,7 @@ class RBHFilter:
         Args:
             output_dir (Path): Diretório onde o arquivo filtrado será salvo.
         """
-        print("--- Filtrando Reciprocal Best Hits (RBH) ---")
+        logging.info("Filtrando Reciprocal Best Hits (RBH)")
         input_path = output_dir / "diamond_results.tsv"
         output_path = output_dir / "rbh_hits.tsv"
 
@@ -77,7 +85,7 @@ class RBHFilter:
                    include_header=False
                    )
 
-        print(f"Filtragem concluída. Pares de RBH salvos em "
+        logging.info(f"Filtragem concluída. Pares de RBH salvos em "
               f"{output_path}")
         return output_path
 

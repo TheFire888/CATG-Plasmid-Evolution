@@ -5,6 +5,13 @@ Este módulo encapsula a predição de genes usando a biblioteca Pyrodigal.
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from typing import Tuple, Iterable
+import logging
+logging.basicConfig(
+        level=logging.DEBUG,
+        format="{asctime} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+        )
 
 import Bio.SeqIO
 from Bio.SeqRecord import SeqRecord
@@ -65,7 +72,7 @@ class ProteinPredictor:
         output_proteins_path = output_dir / "proteins.faa"
         output_counts_path = output_dir / "gene_counts.tsv"
 
-        print(f"Iniciando predição de proteínas para: {input_path.name}")
+        logging.info(f"Iniciando predição de proteínas para: {input_path.name}")
 
         fasta_parser = Bio.SeqIO.parse(input_path, "fasta")
 
@@ -92,7 +99,7 @@ class ProteinPredictor:
                     f_out.write(header + "\n")
                     f_out.write(gene.translate(include_stop=False) + "\n")
 
-        print(f"Proteínas salvas em: {output_proteins_path}")
+        logging.info(f"Proteínas salvas em: {output_proteins_path}")
 
 
 # Teste da classe

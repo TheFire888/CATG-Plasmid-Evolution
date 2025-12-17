@@ -2,6 +2,13 @@
 Este módulo realiza toda a pipeline necessária para o plasmidEvo
 """
 from pathlib import Path
+import logging
+logging.basicConfig(
+        level=logging.DEBUG,
+        format="{asctime} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+        )
 
 from plasmid_evo.prediction import ProteinPredictor
 from plasmid_evo.alignment import DiamondAligner
@@ -38,7 +45,7 @@ class PlasmidEvoPipeline:
             input_fasta: Caminho para o arquivo FASTA de entrada.
             output_dir: Diretório onde os resultados serão salvos.
         """
-        print("--- Iniciando pipeline plasmidEvo ---")
+        logging.info("Iniciando pipeline plasmidEvo")
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
 
@@ -52,5 +59,5 @@ class PlasmidEvoPipeline:
             self.clusterer.cluster(output_path, markov_time)
             self.analyzer.generate_db(output_path, markov_time)
 
-        print("--- Pipeline concluída. "
-              f"Resultados salvos em {output_path} ---")
+        logging.info("Pipeline concluída. "
+              f"Resultados salvos em {output_path}")

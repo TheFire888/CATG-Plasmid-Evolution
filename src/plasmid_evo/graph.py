@@ -5,7 +5,13 @@ de RBH e a exporta para formatos de análise de redes.
 from collections import defaultdict
 from pathlib import Path
 import csv
-
+import logging
+logging.basicConfig(
+        level=logging.DEBUG,
+        format="{asctime} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+        )
 
 class GeneGraph:
     """
@@ -40,7 +46,7 @@ class GeneGraph:
         Primeira passagem: lê o arquivo para coletar os bitscores dos autohits.
         """
         autohits = defaultdict()
-        print("Coletando autohits para normalização de peso...")
+        logging.info("Coletando autohits para normalização de peso...")
         with open(input_path, 'r', newline='', encoding="utf-8") as file:
             reader = csv.reader(file, delimiter='\t')
             for row in reader:
@@ -57,7 +63,7 @@ class GeneGraph:
         Segunda passagem: lê o arquivo para determinar os nós do grafo
         """
         nodes = set()
-        print("Mapeando nós para IDs...")
+        logging.info("Mapeando nós para IDs...")
         with open(input_path, 'r', newline='', encoding="utf-8") as file:
             reader = csv.reader(file, delimiter='\t')
             for row in reader:
@@ -78,7 +84,7 @@ class GeneGraph:
         return weight
 
     def _write_pajek(self, input_path: Path, output_dir: Path):
-        print("Escrevendo arquivo de saída...")
+        logging.info("Escrevendo arquivo de saída...")
         output_file = output_dir / "graph.net"
         node_to_id = self._find_nodes(input_path)
         autohits = self._collect_autohits(input_path)
@@ -139,7 +145,7 @@ class GeneGraph:
                         weight = bitscore / autohits[qseq_gene_id]
                         ncol_file.write(f"{qseq_gene_id}\t{sseq_gene_id}\t{weight}\n")
                     except KeyError:
-                        print(f"Aviso: Autohit não encontrado para {qseq_gene_id}. Ignorando a aresta.")
+                        logging.info(f"Aviso: Autohit não encontrado para {qseq_gene_id}. Ignorando a aresta.")
                         continue
 
                 qedge = (qseq_contig, qseq_gene_id)
@@ -163,7 +169,7 @@ class GeneGraph:
         """
         input_path = output_dir / "rbh_hits.tsv"
 
-        print(f"Exportando o grafo para o formato {file_format}...")
+        logging.info(f"Exportando o grafo para o formato {file_format}...")
         match file_format:
             case "pajek":
                 output_path = output_dir / "graph.net"
@@ -176,7 +182,7 @@ class GeneGraph:
                                  f"'{file_format}'. "
                                  "Use 'pajek' ou 'ncol'.")
 
-        print(f"Arquivo salvo em: {output_path}")
+        logging.info(f"Arquivo salvo em: {output_path}")
         return output_path
 
 
