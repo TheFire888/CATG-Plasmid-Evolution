@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=protein_clu
+#SBATCH --job-name=protein_clu_rbh
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
 #SBATCH --mem=18GB
