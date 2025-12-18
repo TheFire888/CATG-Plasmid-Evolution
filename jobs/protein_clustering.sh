@@ -19,6 +19,8 @@ awk -v OFS='\t' '{print $1, $2, $4}' "${WORKDIR}/diamond_results.tsv" > "${WORKD
 seqkit fx2tab -ni "${WORKDIR}/proteins.faa" > "${WORKDIR}/proteins_list.txt"
 
 pixi run diamond greedy-vertex-cover \
+    --verbose \
+    --log \
     --threads 16 \
     --db "${WORKDIR}/proteins_list.txt" \
     --out "${WORKDIR}/diamond_protein_clustering" \
