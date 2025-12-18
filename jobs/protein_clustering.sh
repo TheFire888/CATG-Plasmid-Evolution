@@ -15,7 +15,8 @@ echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 WORKDIR="test/6790.17-12-2025_10:51:03"
 
 awk -v OFS='\t' '{print $1, $2, $4}' "${WORKDIR}/diamond_results.tsv" > "$WORKDIR}/diamond_results_filtered.tsv"
-pixi run diamond --threads 16 \
+pixi run diamond greedy-vertex-cover \
+    --threads 16 \
     --out "${WORKDIR}/diamond_protein_clustering" \
     --header "simple" \
     --edge-format "triplet" \
