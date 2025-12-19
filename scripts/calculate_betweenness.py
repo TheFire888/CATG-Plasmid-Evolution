@@ -23,4 +23,4 @@ logging.info(f"Writing results to {betweenness_file}...")
 
 with open(betweenness_file, 'w', encoding="utf-8") as f_out:
     for i, value in enumerate(vb):
-        f.write(f"{i}\t{g.vp["name"][i]}\t{value}\n")
+        f.write(f"{i}\t{g.vs["name"][i]}\t{value}\n")
