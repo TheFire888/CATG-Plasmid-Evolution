@@ -68,6 +68,7 @@ class PlasmidEvoPipeline:
         self.aligner.align(output_path)
         self.rbh_filter.diamond_filter(output_path)
         self.graph_builder.generate(output_path)
+        self.clusterer.cluster(output_path, 0.1)
 
         # Executa para diferentes tempos de Markov
         # for markov_time in [0.1, 0.2, 0.5, 1, 2, 4]:
