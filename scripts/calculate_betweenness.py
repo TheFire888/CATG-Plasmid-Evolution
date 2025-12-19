@@ -13,7 +13,7 @@ graph_file = data_dir / 'graph.graphml'
 betweenness_file = data_dir / 'betweenness.tsv'
 
 logging.info("Loading graph...")
-g = ig.Graph.Read(str(gt_file), format="graphml")
+g = ig.Graph.Read(str(graph_file), format="graphml")
 logging.info("Graph loaded")
 
 logging.info("Calculating betweenness...")
