@@ -52,7 +52,7 @@ class GeneGraph:
             for row in reader:
                 if row[0] == row[1]:
                     try:
-                        autohits[row[0]] = float(row[3])
+                        autohits[row[0]] = float(row[2])
                     except ValueError:
                         continue
 
@@ -99,7 +99,7 @@ class GeneGraph:
                 reader = csv.reader(f_in, delimiter='\t')
                 for row in reader:
                     qseq_gene_id, sseq_gene_id = row[0], row[1]
-                    bitscore = float(row[3])
+                    bitscore = float(row[2])
 
                     if qseq_gene_id != sseq_gene_id:
                         try:
@@ -137,7 +137,7 @@ class GeneGraph:
             reader = csv.reader(tsv_file, delimiter='\t')
             for row in reader:
                 qseq_gene_id, sseq_gene_id = row[0], row[1]
-                bitscore = float(row[3])
+                bitscore = float(row[2])
                 qseq_contig = qseq_gene_id.rsplit("_", 1)[0]
 
                 if qseq_gene_id != sseq_gene_id:
