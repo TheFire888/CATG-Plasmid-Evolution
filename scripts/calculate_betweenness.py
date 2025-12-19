@@ -1,4 +1,4 @@
-import graph_tool.all as gt
+import igraph as ig
 from pathlib import Path
 import logging
 logging.basicConfig(
@@ -9,15 +9,15 @@ logging.basicConfig(
         )
 
 data_dir = Path('test/6790.17-12-2025_10:51:03')
-gt_file = data_dir / 'graph.gt.gz'
+graph_file = data_dir / 'graph.graphml'
 betweenness_file = data_dir / 'betweenness.tsv'
 
 logging.info("Loading graph...")
-g = gt.load_graph(str(gt_file))
+g = ig.Graph.Read(str(gt_file), format="graphml")
 logging.info("Graph loaded")
 
 logging.info("Calculating betweenness...")
-vb, eb = gt.betweenness(g)
+vb = g.betweenness()
 
 logging.info(f"Writing results to {betweenness_file}...")
 
