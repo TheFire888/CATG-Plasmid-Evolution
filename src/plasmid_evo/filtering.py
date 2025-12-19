@@ -53,10 +53,10 @@ class RBHFilter:
             separator='\t',
             has_header=False,
             new_columns=['qseq_gene', 'sseq_gene',
-                         'pident', 'bitscore'
+                         'bitscore'
                          ],
             schema_overrides=[pl.Categorical, pl.Categorical,
-                              pl.Float64, pl.Float64
+                              pl.Float64
                               ]
         ).with_columns(
             qseq_contig=(pl.col("qseq_gene").cast(pl.Utf8)
@@ -79,7 +79,7 @@ class RBHFilter:
             right_on=["reverse_sseq", "reverse_qseq"],
             how="inner"
         ).select(
-            'qseq_gene', 'sseq_gene', 'pident', 'bitscore'
+            'qseq_gene', 'sseq_gene', 'bitscore'
         ).sink_csv(output_path,
                    separator='\t',
                    include_header=False
