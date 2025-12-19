@@ -16,7 +16,7 @@ WORKDIR="test/6790.17-12-2025_10:51:03"
 
 awk -v OFS='\t' '{print $1, $2, 1}' "${WORKDIR}/diamond_results.tsv" > "${WORKDIR}/diamond_results_filtered.tsv"
 
-seqkit fx2tab -ni "${WORKDIR}/proteins.faa" > "${WORKDIR}/proteins_list.txt"
+awk '{ if (!seen[$1]++) print $1; if (!seen[$2]++) print $2 }' "${WORKDIR}/diamond_results.tsv" > "${WORKDIR}/proteins_list.txt"
 
 pixi run diamond greedy-vertex-cover \
     --verbose \

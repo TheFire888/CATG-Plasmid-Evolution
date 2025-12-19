@@ -16,13 +16,13 @@ WORKDIR="test/6790.17-12-2025_10:51:03"
 
 awk -v OFS='\t' '{print $1, $2, 1}' "${WORKDIR}/rbh_hits.tsv" > "${WORKDIR}/rbh_hits_filtered.tsv"
 
-seqkit fx2tab -ni "${WORKDIR}/proteins.faa" > "${WORKDIR}/proteins_list.txt"
+awk '{ if (!seen[$1]++) print $1; if (!seen[$2]++) print $2 }' "${WORKDIR}/diamond_results.tsv" > "${WORKDIR}/proteins_list_rbh.txt"
 
 pixi run diamond greedy-vertex-cover \
     --verbose \
     --log \
     --threads 16 \
-    --db "${WORKDIR}/proteins_list.txt" \
+    --db "${WORKDIR}/proteins_list_rbh.txt" \
     --out "${WORKDIR}/diamond_protein_clustering_rbh" \
     --header "simple" \
     --edge-format "triplet" \
