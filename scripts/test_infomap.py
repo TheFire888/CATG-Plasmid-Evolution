@@ -29,7 +29,7 @@ output_name = str(output_dir
                   / f"clustered_graph_{markov_time}.ftree")
 
 im = Infomap(two_level=True,
-             num_trials=3,
+             num_trials=1,
              out_name=output_name,
              markov_time=markov_time,
              variable_markov_time=True)
