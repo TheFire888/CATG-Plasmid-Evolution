@@ -21,6 +21,7 @@ awk '{ if (!seen[$1]++) print $1; if (!seen[$2]++) print $2 }' "${WORKDIR}/diamo
 pixi run diamond greedy-vertex-cover \
     --verbose \
     --log \
+    --connected-component-depth 0 \
     --threads 16 \
     --db "${WORKDIR}/proteins_list_rbh.txt" \
     --out "${WORKDIR}/diamond_protein_clustering_rbh" \
