@@ -13,6 +13,9 @@ logging.basicConfig(
         datefmt="%Y-%m-%d %H:%M",
         )
 
+import graph_tool.all as gt
+import igraph as ig
+
 class GeneGraph:
     """
     Constrói e exporta um grafo de genes e contigs a partir de um
@@ -85,46 +88,21 @@ class GeneGraph:
 
     def _write_pajek(self, input_path: Path, output_dir: Path):
         logging.info("Escrevendo arquivo de saída...")
-        output_file = output_dir / "graph.net"
-        node_to_id = self._find_nodes(input_path)
-        autohits = self._collect_autohits(input_path)
-        with open(output_file, 'w', encoding="utf-8") as f_out:
-            f_out.write(f"*Vertices {len(node_to_id)}\n")
-            for node, node_id in node_to_id.items():
-                f_out.write(f'{node_id} "{node}"\n')
+        base_scan = pl.scan_csv(
+            input_path,
+            separator='\t',
+            has_header=False,
+            new_columns=["centroid", "protein"]
+        ).with_columns(
+            contig=pl.col("protein").str.replace(r"_[^_]*$", "")
+        ).select(["centroid", "contig"])
 
-            f_out.write("*Edges\n")
-            contig_genes_edges = set()
-            with open(input_path, 'r', newline='', encoding="utf-8") as f_in:
-                reader = csv.reader(f_in, delimiter='\t')
-                for row in reader:
-                    qseq_gene_id, sseq_gene_id = row[0], row[1]
-                    bitscore = float(row[2])
+        edge_list = base_scan.collect(engine="streaming").rows()
 
-                    if qseq_gene_id != sseq_gene_id:
-                        try:
-                            weight = self._calculate_weight(bitscore,
-                                                            autohits[qseq_gene_id])
-                            source_id = node_to_id[qseq_gene_id]
-                            target_id = node_to_id[sseq_gene_id]
-                            f_out.write(f"{source_id} {target_id} {weight}\n")
-
-                        except KeyError:
-                            continue
-                        except ValueError:
-                            continue
-
-                    if '_' in qseq_gene_id:
-                        qseq_contig = qseq_gene_id.rsplit('_', 1)[0]
-                        qedge = (qseq_contig, qseq_gene_id)
-                        if qedge not in contig_genes_edges:
-                            try:
-                                source_id = node_to_id[qseq_contig]
-                                target_id = node_to_id[qseq_gene_id]
-                                f_out.write(f"{source_id} {target_id} 1.0\n")
-                                contig_genes_edges.add(qedge)
-                            except KeyError:
-                                continue
+        graph = gt.Graph(edge_list, hashed=True, directed=False)
+        graph.save(str(output_dir / "graph.graphml"))
+        graph_ig = ig.Graph.Read(str(output_dir / "graph.graphml"), format="graphml")
+        graph_ig.write(str(output_dir / "graph.net"), format="pajek")
 
     def _write_ncol(self, input_path: Path, output_dir: Path):
         output_file = output_dir / "graph.ncol"
@@ -167,7 +145,7 @@ class GeneGraph:
         Returns:
             Path: O caminho para o arquivo de grafo gerado.
         """
-        input_path = output_dir / "rbh_hits.tsv"
+        input_path = output_dir / "diamond_protein_clustering_rbh.tsv"
 
         logging.info(f"Exportando o grafo para o formato {file_format}...")
         match file_format:
