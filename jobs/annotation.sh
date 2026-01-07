@@ -12,8 +12,6 @@
 export PATH="/home/lleal/.pixi/bin:$PATH"
 
 echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
-pixi reinstall
-pixi run build
 
 WORKDIR="/home/lleal/programs/plasmidEvo/test/7149.07-01-2026_11:53:50"
 cd $WORKDIR
@@ -25,4 +23,4 @@ pixi run nextflow run ebi-pf-team/interproscan6 \
   -profile apptainer \
   --datadir ${DATADIR} \
   --input ${WORKDIR}/proteins.faa \
-   --applications Pfam
+   --applications Pfam,NCBIFAM,PANTHER,SUPERFAMILY

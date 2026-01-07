@@ -11,8 +11,6 @@
 export PATH="/home/lleal/.pixi/bin:$PATH"
 
 echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
-pixi reinstall
-pixi run build
 
 WORKDIR="test/${SLURM_JOB_ID}.$(date +'%d-%m-%Y_%T')"
 mkdir ${WORKDIR}
