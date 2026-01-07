@@ -24,4 +24,5 @@ pixi run nextflow run ebi-pf-team/interproscan6 \
   -r 6.0.0 \
   -profile apptainer \
   --datadir ${DATADIR} \
-  --input ${WORKDIR}/proteins.faa
+  --input ${WORKDIR}/proteins.faa \
+   --applications Pfam
