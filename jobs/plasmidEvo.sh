@@ -2,7 +2,7 @@
 #SBATCH --job-name=plasmidEvo
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
-#SBATCH --mem=64GB
+#SBATCH --mem=86GB
 #SBATCH --cpus-per-task=16
 #SBATCH --time=32:00:00
 #SBATCH --output=out/plasmidEvo%j.out
@@ -16,9 +16,6 @@ pixi run build
 
 WORKDIR="test/${SLURM_JOB_ID}.$(date +'%d-%m-%Y_%T')"
 mkdir ${WORKDIR}
-SAMPLE_PATH="${WORKDIR}/sample.fna" 
+SAMPLE_PATH="data/genbank_plasmid_seqs.fna" 
 
-pixi run seqkit sample -p 0.001 "data/genbank_plasmid_seqs.fna" > ${SAMPLE_PATH}
 pixi run plasmid-evo ${SAMPLE_PATH} ${WORKDIR}
-
-
