@@ -17,6 +17,7 @@ logging.basicConfig(
 from plasmid_evo.prediction import ProteinPredictor
 from plasmid_evo.alignment import DiamondAligner
 from plasmid_evo.filtering import RBHFilter
+from plasmid_evo.protein_clustering import DiamondClustering
 from plasmid_evo.graph import GeneGraph
 from plasmid_evo.clustering import GeneClusterer
 from plasmid_evo.analysis import AnalysisEngine
@@ -36,6 +37,7 @@ class PlasmidEvoPipeline:
         self.predictor = ProteinPredictor(config.get('predictor_params', {}))
         self.aligner = DiamondAligner(config.get('aligner_params', {}))
         self.rbh_filter = RBHFilter(config.get('filter_params', {}))
+        self.protein_cluster = DiamondClustering(config.get('protein_cluster_params', {}))
         self.graph_builder = GeneGraph()
         self.clusterer = GeneClusterer(config.get('clusterer_params', {}))
         self.analyzer = AnalysisEngine()
@@ -67,6 +69,7 @@ class PlasmidEvoPipeline:
         self.predictor.predict(input_fasta, output_path)
         self.aligner.align(output_path)
         self.rbh_filter.diamond_filter(output_path)
+        self.protein_cluster.vertex_cover(output_path)
         self.graph_builder.generate(output_path)
         self.clusterer.cluster(output_path, 0.1)
         self.analyzer.generate_db(output_path, 0.1)
