@@ -1,6 +1,7 @@
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from typing import Tuple, Iterable
+import threading
 import logging
 logging.basicConfig(
         level=logging.DEBUG,
