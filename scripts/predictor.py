@@ -25,12 +25,12 @@ def log_memory():
 threading.Thread(target=log_memory, daemon=True).start()
 
 def _find_genes_in_sequence(
-        self, seq_record: SeqRecord) -> Tuple[str, Iterable[GeneFinder]]:
+        seq_record: SeqRecord) -> Tuple[str, Iterable[GeneFinder]]:
     gene_finder = GeneFinder(meta=self.meta)
     genes = gene_finder.find_genes(bytes(seq_record.seq))
     return seq_record.id, genes
 
-def predict(self, input_fasta: str, output_dir: Path) -> None:
+def predict(input_fasta: str, output_dir: Path) -> None:
     """
     Lê um arquivo FASTA, prevê os genes/proteínas e salva os resultados.
 
