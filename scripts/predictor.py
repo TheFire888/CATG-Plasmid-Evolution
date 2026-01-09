@@ -24,13 +24,13 @@ def log_memory():
 
 threading.Thread(target=log_memory, daemon=True).start()
 
-def _find_genes_in_sequence(
+def find_genes_in_sequence(
         seq_record: SeqRecord) -> Tuple[str, Iterable[GeneFinder]]:
-    gene_finder = GeneFinder(meta=self.meta)
+    gene_finder = GeneFinder(meta=True)
     genes = gene_finder.find_genes(bytes(seq_record.seq))
     return seq_record.id, genes
 
-def predict(input_fasta: str, output_dir: Path) -> None:
+def predict(input_fasta: str, output_dir: Path, threads: int) -> None:
     """
     Lê um arquivo FASTA, prevê os genes/proteínas e salva os resultados.
 
@@ -54,7 +54,7 @@ def predict(input_fasta: str, output_dir: Path) -> None:
     fasta_parser = Bio.SeqIO.parse(input_path, "fasta")
 
     with (
-        ThreadPool(self.threads) as pool,
+        ThreadPool(threads) as pool,
         open(output_proteins_path, "w", encoding="utf-8") as f_out,
         open(output_counts_path, "w", encoding="utf-8") as f_count,
     ):
@@ -62,7 +62,7 @@ def predict(input_fasta: str, output_dir: Path) -> None:
 
         # pool.imap processa os resultados conforme eles ficam prontos
         for seq_id, pred_genes in pool.imap(
-            self._find_genes_in_sequence, fasta_parser
+            find_genes_in_sequence, fasta_parser
         ):
             f_count.write(f"{seq_id}\t{len(pred_genes)}\n")
             for i, gene in enumerate(pred_genes, 1):
@@ -83,7 +83,7 @@ def predict(input_fasta: str, output_dir: Path) -> None:
 @click.argument('output_dir', type=click.Path())
 @click.option('--threads', '-t', default=1, help='Número de threads.')
 def main(input_fasta, output_dir, threads):
-    predict(input_fasta, Path(output_dir))
+    predict(input_fasta, Path(output_dir), threads)
 
 if __name__ == "__main__":
     main()
