@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --mem=32GB
 #SBATCH --cpus-per-task=16
-#SBATCH --time=32:00:00
+#SBATCH --time=50:00:00
 #SBATCH --output=out/alignment%j.out
 #SBATCH --error=err/alignment%j.err
 
