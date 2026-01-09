@@ -15,6 +15,7 @@ echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 WORKDIR="/scratch/local/lleal/plasmid_evo"
 SCRIPTSDIR="scripts/"
 SAMPLE_PATH="data/genbank_plasmid_seqs.fna" 
+rm -rf "${WORKDIR}/*"
 mkdir -p ${WORKDIR}
 
 pixi run python "${SCRIPTSDIR}/predictor.py" "${SAMPLE_PATH}" "${WORKDIR}" -t 16
