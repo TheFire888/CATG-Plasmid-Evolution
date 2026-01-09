@@ -13,6 +13,7 @@ logging.basicConfig(
 import Bio.SeqIO
 from Bio.SeqRecord import SeqRecord
 from pyrodigal import GeneFinder
+import click
 
 def log_memory():
     process = psutil.Process(os.getpid())
