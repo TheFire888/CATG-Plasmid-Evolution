@@ -12,11 +12,8 @@ export PATH="/home/lleal/.pixi/bin:$PATH"
 
 echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
-WORKDIR="/scratch/global/lleal/plasmid_evo"
+WORKDIR="/home/lleal/programs/plasmidEvo/rslts"
 SCRIPTSDIR="scripts/"
-mkdir -p ${WORKDIR}
-
-mv "/scratch/local/lleal/plasmid_evo/proteins.faa" ${WORKDIR}
 
 pixi run diamond makedb \
     --in "${WORKDIR}/proteins.faa" \
