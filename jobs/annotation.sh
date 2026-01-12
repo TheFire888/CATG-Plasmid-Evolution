@@ -92,14 +92,15 @@ interproscan() {
 
 export PATH="/home/lleal/.pixi/bin:$PATH"
 
-WORKDIR="/scratch/local/lleal/"
+WORKDIR="/home/lleal/programs/plasmidEvo/rslts"
+DATADIR="/home/lleal/programs/plasmidEvo/data/interproscan-5.75-106.0"
 
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
 interproscan \
     --input "${WORKDIR}/proteins.faa" \
-    --applications Pfam,NCBIfam,CDD,HAMAP \
+    --applications Pfam,NCBIfam,CDD,HAMAP,Panther,superfamily \
     --iprlookup --goterms --pathways \
-    --data-dir data/interproscan-5.75-106.0 \
+    --data-dir "${DATADIR}" \
     --cpu 16 \
     --output-dir "${WORKDIR}/annotations" \
