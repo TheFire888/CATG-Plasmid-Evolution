@@ -3,8 +3,8 @@
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
 #SBATCH --mem=32GB
-#SBATCH --cpus-per-task=16
-#SBATCH --time=50:00:00
+#SBATCH --cpus-per-task=32
+#SBATCH --time=100:00:00
 #SBATCH --output=out/alignment%j.out
 #SBATCH --error=err/alignment%j.err
 
@@ -29,4 +29,4 @@ pixi run diamond blastp \
     --query-cover 75 \
     --subject-cover 75 \
     --min-score 30 \
-    --threads 16
+    --threads 32
