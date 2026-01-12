@@ -12,7 +12,7 @@ export PATH="/home/lleal/.pixi/bin:$PATH"
 
 echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
-WORKDIR="test/6790.17-12-2025_10:51:03"
+WORKDIR="/home/lleal/programs/plasmidEvo/rslts"
 
 awk -v OFS='\t' '{print $1, $2, 1}' "${WORKDIR}/rbh_hits.tsv" > "${WORKDIR}/proteins_edges.tsv"
 
