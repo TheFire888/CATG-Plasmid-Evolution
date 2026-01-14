@@ -16,8 +16,6 @@ DATADIR="/home/lleal/programs/plasmidEvo/data/interproscan-5.75-106.0"
 
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
-apptainer --silent exec         -B "data/interproscan-5.75-106.0/data:/opt/interproscan/data"         "$HOME/images/interproscan.sif"         /opt/interproscan/interproscan.sh --cpu 4 --applications Pfam,CDD,HAMAP --input rslts/sample.faa --output-dir rslts/test
-
 apptainer --silent exec \
     -B "${DATADIR}/data:/opt/interproscan/data" \
     "$HOME/images/interproscan.sif" \
