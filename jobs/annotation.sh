@@ -102,5 +102,6 @@ interproscan \
     --applications Pfam,NCBIfam,CDD,HAMAP,Panther,superfamily \
     --iprlookup --goterms --pathways \
     --data-dir "${DATADIR}" \
+    --verbose \
     --cpu 48 \
     --output-dir "${WORKDIR}/protein_annotations" \
