@@ -27,6 +27,7 @@ jupyter_console = ">=6.6.3,<7"
 infomap = ">=2.8.0,<3"
 graph-tool = ">=2.98,<3"
 ijson = ">=3.4.0.post0,<4"
+bakta = ">=1.8.1,<2"
 
 [tasks]
 build = "pip install -e ."
