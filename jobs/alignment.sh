@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --job-name=alignment
-#SBATCH --exclusive
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
 #SBATCH --mem=100GB
