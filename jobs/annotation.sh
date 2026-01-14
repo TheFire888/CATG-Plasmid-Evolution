@@ -103,4 +103,4 @@ interproscan \
     --iprlookup --goterms --pathways \
     --data-dir "${DATADIR}" \
     --cpu 48 \
-    --output-dir "${WORKDIR}/annotations" \
+    --output-dir "${WORKDIR}/protein_annotations" \
