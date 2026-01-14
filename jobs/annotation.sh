@@ -3,9 +3,9 @@
 #SBATCH --job-name=annotation
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
-#SBATCH --mem=60GB
-#SBATCH --cpus-per-task=16
-#SBATCH --time=32:00:00
+#SBATCH --mem=100GB
+#SBATCH --cpus-per-task=48
+#SBATCH --time=64:00:00
 #SBATCH --output=out/annotation%j.out
 #SBATCH --error=err/annotation%j.err
 
@@ -102,5 +102,5 @@ interproscan \
     --applications Pfam,NCBIfam,CDD,HAMAP,Panther,superfamily \
     --iprlookup --goterms --pathways \
     --data-dir "${DATADIR}" \
-    --cpu 16 \
+    --cpu 48 \
     --output-dir "${WORKDIR}/annotations" \
