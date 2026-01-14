@@ -25,18 +25,10 @@ def log_memory():
 threading.Thread(target=log_memory, daemon=True).start()
 
 def run_command(command: list):
-    """
-    (Método privado) Executa um comando de subprocesso
-    e lida com erros.
-    """
     try:
-        subprocess.run(
-            command, check=True, capture_output=True,
-            text=True, encoding="utf-8"
-        )
-    except subprocess.CalledProcessError as e:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError:
         logging.error(f"Erro ao executar o comando: {' '.join(command)}")
-        logging.error(f"Stderr: {e.stderr}")
         raise
 
 max_target_seqs = 50000
