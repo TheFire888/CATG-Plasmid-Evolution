@@ -104,4 +104,4 @@ interproscan \
     --data-dir "${DATADIR}" \
     --verbose \
     --cpu 48 \
-    --output-dir "${WORKDIR}/protein_annotations" \
+    --output-dir "${WORKDIR}/annotations" \
