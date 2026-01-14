@@ -15,10 +15,6 @@ echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 WORKDIR="/home/lleal/programs/plasmidEvo/rslts"
 SCRIPTSDIR="scripts/"
 
-pixi run diamond makedb \
-    --in "${WORKDIR}/proteins.faa" \
-    -d "${WORKDIR}/DMND_DB"
-
 pixi run diamond blastp \
     -q "${WORKDIR}/proteins.faa" \
     -d "${WORKDIR}/DMND_DB" \
