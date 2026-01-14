@@ -19,7 +19,7 @@ pixi run diamond blastp \
     -q "${WORKDIR}/proteins.faa" \
     -d "${WORKDIR}/DMND_DB" \
     -o "${WORKDIR}/diamond_results.tsv" \
-    --sensitive \
+    --mid-sensitive \
     --outfmt 6 qseqid sseqid bitscore \
     --max-target-seqs 50000 \
     --query-cover 75 \
