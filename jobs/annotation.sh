@@ -16,4 +16,4 @@ DATADIR="/home/lleal/programs/plasmidEvo/data/database"
 
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
-local-cd-search annotate "${WORKDIR}/proteins.faa" "${WORKDIR}/annotations.tsv" "${DATADIR}/database"
+local-cd-search annotate "${WORKDIR}/proteins.faa" "${WORKDIR}/annotations.tsv" "${DATADIR}"
