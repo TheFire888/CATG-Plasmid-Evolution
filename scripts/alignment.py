@@ -31,7 +31,7 @@ def run_command(command: list):
         logging.error(f"Erro ao executar o comando: {' '.join(command)}")
         raise
 
-max_target_seqs = 50000
+max_target_seqs = 10000
 query_cover = 75
 subject_cover = 75
 min_score = 30
@@ -50,7 +50,7 @@ def align(output_dir: Path, threads) -> None:
         "-q", str(protein_path),
         "-d", str(db_path),
         "-o", str(output_tsv_path),
-        "--mid-sensitive",
+        "--fast",
         "--outfmt", *out_format,
         "--max-target-seqs", str(max_target_seqs),
         "--query-cover", str(query_cover),
