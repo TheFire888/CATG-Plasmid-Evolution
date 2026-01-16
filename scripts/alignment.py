@@ -40,11 +40,11 @@ out_format = ["6"] + out_columns
 
 def align(output_dir: Path, threads, i) -> None:
     logging.info("Iniciando alinhamento all-versus-all com DIAMOND")
-    protein_path = output_dir / "split" / f"proteins.part_0{i}.faa"
+    protein_path = output_dir / "split" / f"proteins.part_0{i}.faa.gz"
     db_path = output_dir / "proteins.dmnd"
     output_tsv_path = output_dir / f"diamond_results.part_0{i}.tsv"
 
-    logging.info("Executando a busca DIAMOND blastp...")
+    logging.info(f"Executando a busca {i} DIAMOND blastp...")
     blastp_cmd = [
         "diamond", "blastp",
         "-q", str(protein_path),
@@ -57,6 +57,8 @@ def align(output_dir: Path, threads, i) -> None:
         "--subject-cover", str(subject_cover),
         "--min-score", str(min_score),
         "--threads", str(threads),
+        "--bin", str(64),
+        "--block-size", str(0.5),
     ]
     run_command(blastp_cmd)
 
