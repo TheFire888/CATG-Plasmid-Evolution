@@ -4,15 +4,17 @@ import psutil
 import time
 import os
 import logging
+
 logging.basicConfig(
-        level=logging.DEBUG,
-        format="{asctime} - {levelname} - {message}",
-        style="{",
-        datefmt="%Y-%m-%d %H:%M",
-        )
+    level=logging.DEBUG,
+    format="{asctime} - {levelname} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
+)
 
 import polars as pl
 import click
+
 
 def log_memory():
     process = psutil.Process(os.getpid())
@@ -21,7 +23,9 @@ def log_memory():
         logging.debug(f"Monitor: {mem:.2f} MB em uso")
         time.sleep(60)
 
+
 threading.Thread(target=log_memory, daemon=True).start()
+
 
 def diamond_filter(output_dir: Path) -> None:
     """
@@ -38,51 +42,56 @@ def diamond_filter(output_dir: Path) -> None:
     input_path = output_dir / "diamond_results.tsv"
     output_path = output_dir / "rbh_hits.tsv"
 
-    lf = pl.scan_csv(
-        input_path,
-        separator='\t',
-        has_header=False,
-        new_columns=['qseq_gene', 'sseq_gene',
-                     'bitscore'
-                     ],
-        schema_overrides=[pl.Categorical, pl.Categorical,
-                          pl.Float64
-                          ]
-    ).with_columns(
-        qseq_contig=(pl.col("qseq_gene").cast(pl.Utf8)
-                     .str.replace(r"_[^_]*$", "").cast(pl.Categorical)),
-        sseq_contig=(pl.col("sseq_gene").cast(pl.Utf8)
-                     .str.replace(r"_[^_]*$", "").cast(pl.Categorical))
-    ).filter(  # Garante que teremos os autohits
-        (pl.col("qseq_contig") != pl.col("sseq_contig"))
-        | (pl.col("qseq_gene") == pl.col("sseq_gene"))
-    ).group_by(
-        "qseq_gene", "sseq_contig"
-    ).first()
+    lf = (
+        pl.scan_csv(
+            input_path,
+            separator="\t",
+            has_header=False,
+            new_columns=["qseq_gene", "sseq_gene", "bitscore"],
+            schema_overrides=[pl.Categorical, pl.Categorical, pl.Float64],
+        )
+        .with_columns(
+            qseq_contig=(
+                pl.col("qseq_gene")
+                .cast(pl.Utf8)
+                .str.replace(r"_[^_]*$", "")
+                .cast(pl.Categorical)
+            ),
+            sseq_contig=(
+                pl.col("sseq_gene")
+                .cast(pl.Utf8)
+                .str.replace(r"_[^_]*$", "")
+                .cast(pl.Categorical)
+            ),
+        )
+        .filter(  # Garante que teremos os autohits
+            (pl.col("qseq_contig") != pl.col("sseq_contig"))
+            | (pl.col("qseq_gene") == pl.col("sseq_gene"))
+        )
+        .unique(subset=["qseq_gene", "sseq_contig"], keep="first")
+    )
 
     lf.join(
         lf.select(
             pl.col("qseq_gene").alias("reverse_qseq"),
-            pl.col("sseq_gene").alias("reverse_sseq")
+            pl.col("sseq_gene").alias("reverse_sseq"),
         ),
         left_on=["qseq_gene", "sseq_gene"],
         right_on=["reverse_sseq", "reverse_qseq"],
-        how="inner"
-    ).select(
-        'qseq_gene', 'sseq_gene', 'bitscore'
-    ).sink_csv(output_path,
-               separator='\t',
-               include_header=False
-               )
+        how="inner",
+    ).select("qseq_gene", "sseq_gene", "bitscore").sink_csv(
+        output_path, separator="\t", include_header=False
+    )
 
-    logging.info(f"Filtragem concluída. Pares de RBH salvos em "
-          f"{output_path}")
+    logging.info(f"Filtragem concluída. Pares de RBH salvos em " f"{output_path}")
     return output_path
 
+
 @click.command()
-@click.argument('output_dir', type=click.Path(exists=True))
+@click.argument("output_dir", type=click.Path(exists=True))
 def main(output_dir):
     diamond_filter(Path(output_dir))
+
 
 if __name__ == "__main__":
     main()
