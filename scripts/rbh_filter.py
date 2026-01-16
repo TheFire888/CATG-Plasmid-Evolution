@@ -48,7 +48,7 @@ def diamond_filter(output_dir: Path) -> None:
             separator="\t",
             has_header=False,
             new_columns=["qseq_gene", "sseq_gene", "bitscore"],
-            schema_overrides=[pl.Categorical, pl.Categorical, pl.Float64],
+            schema_overrides=[pl.Categorical, pl.Categorical, pl.Float32],
             low_memory=True
         )
         .with_columns(
