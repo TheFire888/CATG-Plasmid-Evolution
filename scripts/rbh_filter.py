@@ -61,7 +61,7 @@ def diamond_filter(output_dir: Path) -> None:
             (pl.col("qseq_gene") == pl.col("sseq_gene"))
         )
         .unique(subset=["qseq_gene", "sseq_contig"], keep="first")
-        .collect(streaming=True)
+        .collect(engine="streaming")
         .write_parquet(temp_path)
     )
 
