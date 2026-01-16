@@ -13,7 +13,11 @@ export PATH="/home/lleal/.pixi/bin:$PATH"
 
 WORKDIR="/home/lleal/programs/plasmidEvo/rslts"
 DATADIR="/home/lleal/programs/plasmidEvo/data/database"
+PROTEINDIR="${WORKDIR}/split"
 
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
-local-cd-search annotate "${WORKDIR}/proteins.faa" "${WORKDIR}/annotations.tsv" "${DATADIR}"
+for file in $PROTEINDIR/*; do
+    echo "Processing file: $file"
+    local-cd-search annotate "$file" "${WORKDIR}/annotations.${file}.tsv" "${DATADIR}" --sf
+done
