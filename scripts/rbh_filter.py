@@ -40,46 +40,41 @@ def diamond_filter(output_dir: Path) -> None:
     """
     logging.info("Filtrando Reciprocal Best Hits (RBH)")
     input_path = output_dir / "diamond_results.tsv"
+    temp_path = output_dir / "temp_best_hits.parquet"
     output_path = output_dir / "rbh_hits.tsv"
 
-    lf = (
+    (
         pl.scan_csv(
             input_path,
             separator="\t",
             has_header=False,
             new_columns=["qseq_gene", "sseq_gene", "bitscore"],
-            schema_overrides=[pl.Categorical, pl.Categorical, pl.Float32],
+            schema_overrides=[pl.String, pl.String, pl.Float32],
             low_memory=True
         )
         .with_columns(
-            qseq_contig=(
-                pl.col("qseq_gene")
-                .cast(pl.Utf8)
-                .str.replace(r"_[^_]*$", "")
-                .cast(pl.Categorical)
-            ),
-            sseq_contig=(
-                pl.col("sseq_gene")
-                .cast(pl.Utf8)
-                .str.replace(r"_[^_]*$", "")
-                .cast(pl.Categorical)
-            ),
+            qseq_contig=pl.col("qseq_gene").str.split("_").list.get(0),
+            sseq_contig=pl.col("sseq_gene").str.split("_").list.get(0)
         )
-        .filter(  # Garante que teremos os autohits
-            (pl.col("qseq_contig") != pl.col("sseq_contig"))
-            | (pl.col("qseq_gene") == pl.col("sseq_gene"))
+        .filter(
+            (pl.col("qseq_contig") != pl.col("sseq_contig")) | 
+            (pl.col("qseq_gene") == pl.col("sseq_gene"))
         )
         .unique(subset=["qseq_gene", "sseq_contig"], keep="first")
+        .collect(streaming=True)
+        .write_parquet(temp_path)
     )
 
-    lf.join(
-        lf.select(
-            pl.col("qseq_gene").alias("reverse_qseq"),
-            pl.col("sseq_gene").alias("reverse_sseq"),
+    bh = pl.scan_parquet(temp_path)
+    
+    bh.join(
+        bh.select(
+            pl.col("qseq_gene").alias("rev_q"),
+            pl.col("sseq_gene").alias("rev_s")
         ),
         left_on=["qseq_gene", "sseq_gene"],
-        right_on=["reverse_sseq", "reverse_qseq"],
-        how="inner",
+        right_on=["rev_s", "rev_q"],
+        how="inner"
     ).select("qseq_gene", "sseq_gene", "bitscore").sink_csv(
         output_path, separator="\t", include_header=False
     )
