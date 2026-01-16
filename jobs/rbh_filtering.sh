@@ -2,7 +2,7 @@
 #SBATCH --job-name=rbh_filter
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
-#SBATCH --mem=32GB
+#SBATCH --mem=100GB
 #SBATCH --cpus-per-task=16
 #SBATCH --time=100:00:00
 #SBATCH --output=out/rbh_filter%j.out
