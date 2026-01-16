@@ -17,7 +17,11 @@ PROTEINDIR="${WORKDIR}/split"
 
 echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
-for file in $PROTEINDIR/*; do
+for file in $PROTEINDIR/*.gz; do
+    gunzip -k $file
+done
+
+for file in $PROTEINDIR/*.faa; do
     echo "Processing file: $file"
     local-cd-search annotate "$file" "${WORKDIR}/annotations.${file}.tsv" "${DATADIR}" --sf --tmp-dir "tmp_${file}"
 done
