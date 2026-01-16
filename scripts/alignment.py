@@ -38,39 +38,39 @@ min_score = 30
 out_columns = ["qseqid", "sseqid", "bitscore"]
 out_format = ["6"] + out_columns
 
-def align(output_dir: Path, threads, i) -> None:
+def align(output_dir: Path, threads) -> None:
     logging.info("Iniciando alinhamento all-versus-all com DIAMOND")
-    protein_path = output_dir / "split" / f"proteins.part_0{i}.faa.gz"
+    protein_path = output_dir / "split"
     db_path = output_dir / "proteins.dmnd"
-    output_tsv_path = output_dir / f"diamond_results.part_0{i}.tsv"
+    for file in protein_path.iterdir():
+        output_tsv_path = output_dir / f"diamond_results.{file.stem}.tsv"
 
-    logging.info(f"Executando a busca {i} DIAMOND blastp...")
-    blastp_cmd = [
-        "diamond", "blastp",
-        "-q", str(protein_path),
-        "-d", str(db_path),
-        "-o", str(output_tsv_path),
-        "--fast",
-        "--outfmt", *out_format,
-        "--max-target-seqs", str(max_target_seqs),
-        "--query-cover", str(query_cover),
-        "--subject-cover", str(subject_cover),
-        "--min-score", str(min_score),
-        "--threads", str(threads),
-        "--bin", str(64),
-        "--block-size", str(0.5),
-    ]
-    run_command(blastp_cmd)
+        logging.info(f"Executando a busca {file.stem} DIAMOND blastp...")
+        blastp_cmd = [
+            "diamond", "blastp",
+            "-q", str(protein_path),
+            "-d", str(db_path),
+            "-o", str(output_tsv_path),
+            "--fast",
+            "--outfmt", *out_format,
+            "--max-target-seqs", str(max_target_seqs),
+            "--query-cover", str(query_cover),
+            "--subject-cover", str(subject_cover),
+            "--min-score", str(min_score),
+            "--threads", str(threads),
+            "--bin", str(64),
+            "--block-size", str(0.5),
+        ]
+        run_command(blastp_cmd)
 
-    logging.info(f"Alinhamento {i} concluído.")
+        logging.info(f"Alinhamento {file.stem} concluído.")
 
 
 @click.command()
 @click.argument('output_dir', type=click.Path(exists=True))
 @click.option('--threads', '-t', default=1, help='Número de threads.')
 def main(output_dir, threads):
-    for i in range(1,21):
-        align(Path(output_dir), threads, i)
+    align(Path(output_dir), threads)
 
 if __name__ == "__main__":
     main()
