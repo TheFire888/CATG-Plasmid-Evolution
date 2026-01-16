@@ -31,18 +31,18 @@ def run_command(command: list):
         logging.error(f"Erro ao executar o comando: {' '.join(command)}")
         raise
 
-max_target_seqs = 10000
+max_target_seqs = 1000
 query_cover = 75
 subject_cover = 75
 min_score = 30
 out_columns = ["qseqid", "sseqid", "bitscore"]
 out_format = ["6"] + out_columns
 
-def align(output_dir: Path, threads) -> None:
+def align(output_dir: Path, threads, i) -> None:
     logging.info("Iniciando alinhamento all-versus-all com DIAMOND")
-    protein_path = output_dir / "proteins.faa"
-    db_path = output_dir / f"{protein_path.stem}.dmnd"
-    output_tsv_path = output_dir / "diamond_results.tsv"
+    protein_path = output_dir / "split" / f"proteins.part_0{i}.faa"
+    db_path = output_dir / "proteins.dmnd"
+    output_tsv_path = output_dir / f"diamond_results.part_0{i}.tsv"
 
     logging.info("Executando a busca DIAMOND blastp...")
     blastp_cmd = [
@@ -60,14 +60,15 @@ def align(output_dir: Path, threads) -> None:
     ]
     run_command(blastp_cmd)
 
-    logging.info("Alinhamento concluído.")
+    logging.info(f"Alinhamento {i} concluído.")
 
 
 @click.command()
 @click.argument('output_dir', type=click.Path(exists=True))
 @click.option('--threads', '-t', default=1, help='Número de threads.')
 def main(output_dir, threads):
-    align(Path(output_dir), threads)
+    for i in range(1,21):
+        align(Path(output_dir), threads, i)
 
 if __name__ == "__main__":
     main()
