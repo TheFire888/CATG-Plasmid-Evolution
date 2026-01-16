@@ -19,5 +19,5 @@ echo -e "\n## Job iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
 for file in $PROTEINDIR/*; do
     echo "Processing file: $file"
-    local-cd-search annotate "$file" "${WORKDIR}/annotations.${file}.tsv" "${DATADIR}" --sf
+    local-cd-search annotate "$file" "${WORKDIR}/annotations.${file}.tsv" "${DATADIR}" --sf --tmp-dir "tmp_${file}"
 done
