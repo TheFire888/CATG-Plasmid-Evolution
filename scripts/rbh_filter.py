@@ -21,7 +21,7 @@ def log_memory():
     while True:
         mem = process.memory_info().rss / 1024**2
         logging.debug(f"Monitor: {mem:.2f} MB em uso")
-        time.sleep(60)
+        time.sleep(10)
 
 
 threading.Thread(target=log_memory, daemon=True).start()
