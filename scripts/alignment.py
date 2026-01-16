@@ -48,7 +48,7 @@ def align(output_dir: Path, threads) -> None:
         logging.info(f"Executando a busca {file.stem} DIAMOND blastp...")
         blastp_cmd = [
             "diamond", "blastp",
-            "-q", str(protein_path),
+            "-q", str(file),
             "-d", str(db_path),
             "-o", str(output_tsv_path),
             "--fast",
