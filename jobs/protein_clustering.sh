@@ -2,7 +2,7 @@
 #SBATCH --job-name=protein_clu
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
-#SBATCH --mem=18GB
+#SBATCH --mem=32GB
 #SBATCH --cpus-per-task=16
 #SBATCH --time=32:00:00
 #SBATCH --output=out/protein_clu%j.out
