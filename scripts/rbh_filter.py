@@ -35,7 +35,7 @@ def diamond_filter(output_dir: Path) -> None:
                 SELECT column0 as q_gene, column1 as s_gene, column2 as bitscore,
                        regexp_replace(column0, '_[^_]+$', '') as q_contig,
                        regexp_replace(column1, '_[^_]+$', '') as s_contig
-                FROM read_csv_auto('{input_path}', sep=' ', header=False)
+                FROM read_csv_auto('{input_path}', sep='\t', header=False)
                 WHERE (regexp_replace(column0, '_[^_]+$', '') != (regexp_replace(column1, '_[^_]+$', ''))) 
                    OR (column0 = column1)
             ),
