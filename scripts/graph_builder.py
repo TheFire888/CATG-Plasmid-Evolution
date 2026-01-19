@@ -8,6 +8,7 @@ import csv
 
 import click
 import graph_tool.all as gt
+import polars as pl
 
 logging.basicConfig(level=logging.DEBUG, format="{asctime} - {levelname} - {message}", style="{", datefmt="%Y-%m-%d %H:%M")
 
