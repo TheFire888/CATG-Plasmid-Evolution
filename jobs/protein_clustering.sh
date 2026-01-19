@@ -17,9 +17,9 @@ log_memory() {
 
         if [ -n "$mem_kb" ]; then
             mb=$(awk "BEGIN {printf \"%.2f\", $mem_kb/1024}")
-            echo "[$(date +%T)] Total (Pai + Filhos): $mb MB"
+            echo "[$(date +%T)] Total: $mb MB"
         fi
-        sleep 1
+        sleep 30
     done
 }
 
@@ -44,7 +44,7 @@ pixi run diamond greedy-vertex-cover \
     --connected-component-depth 0 \
     --threads 16 \
     --db "${WORKDIR}/proteins_list.txt" \
-    --out "${WORKDIR}/diamond_protein_clustering.tsv" \
+    --out "${WORKDIR}/protein_clusters.tsv" \
     --memory-limit 50G \
     --edge-format "triplet" \
     --edges "${WORKDIR}/proteins_edges.tsv"
