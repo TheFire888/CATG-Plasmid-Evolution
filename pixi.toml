@@ -29,6 +29,7 @@ graph-tool = ">=2.98,<3"
 ijson = ">=3.4.0.post0,<4"
 bakta = ">=1.8.1,<2"
 jupyterlab_vim = ">=4.1.4,<5"
+seaborn = ">=0.13.2,<0.14"
 
 [tasks]
 build = "pip install -e ."
