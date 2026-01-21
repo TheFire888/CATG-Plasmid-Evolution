@@ -31,8 +31,7 @@ def analyse(output_dir: Path):
                 yield tuple(row)
 
     logging.info("Loading graph...")
-    # g = gt.Graph(edges(graph_ncol), hashed=True, directed=False)
-    g = gt.collection.data["astro-ph"]
+    g = gt.Graph(edges(graph_ncol), hashed=True, directed=False)
 
     logging.info("Minimizing nested blockmodel...")
     state = gt.minimize_nested_blockmodel_dl(g)
