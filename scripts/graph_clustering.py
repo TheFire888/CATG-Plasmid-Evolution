@@ -59,6 +59,8 @@ def analyse(output_dir: Path):
 
                 f_out.write(f"{'\t'.join(path)}\n")
 
+    save_paths(g, state)
+
 @click.command()
 @click.argument("output_dir", type=click.Path(exists=True))
 def main(output_dir):
