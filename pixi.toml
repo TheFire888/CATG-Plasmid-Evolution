@@ -32,3 +32,6 @@ jupyterlab_vim = ">=4.1.4,<5"
 
 [tasks]
 build = "pip install -e ."
+
+[pypi-dependencies]
+pygraphina = ">=0.2.2, <0.3"

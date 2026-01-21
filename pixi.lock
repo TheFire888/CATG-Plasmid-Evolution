@@ -4,6 +4,8 @@ environments:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
     - url: https://conda.anaconda.org/bioconda/
+    indexes:
+    - https://pypi.org/simple
     options:
       pypi-prerelease-mode: if-necessary-or-explicit
     packages:
@@ -424,6 +426,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zlib-ng-2.3.2-hceb46e0_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstandard-0.25.0-py312h5253ce2_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb8e6e7a_2.conda
+      - pypi: https://files.pythonhosted.org/packages/7d/59/9236e858e82380301077d9c693bf425a2de357c62bbc5511491baa9c7164/pygraphina-0.2.2-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
   sha256: fe51de6107f9edc7aa4f786a70f4a883943bc9d39b3bb7307c04c41410990726
@@ -4396,6 +4399,11 @@ packages:
   license_family: LGPL
   size: 413042
   timestamp: 1728635358354
+- pypi: https://files.pythonhosted.org/packages/7d/59/9236e858e82380301077d9c693bf425a2de357c62bbc5511491baa9c7164/pygraphina-0.2.2-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  name: pygraphina
+  version: 0.2.2
+  sha256: 41fec1f37ca590dd12f924346e0179430b48b23ebad7a3448e754d67780b0da4
+  requires_python: '>=3.10'
 - conda: https://conda.anaconda.org/conda-forge/noarch/pylint-3.3.8-pyhe01879c_0.conda
   sha256: 5b19f8113694ff4e4f0d0870cf38357d9e84330ff6c2516127a65764289b6743
   md5: f5ba3b2c52e855b67fc0abedcebc9675
