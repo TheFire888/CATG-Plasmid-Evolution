@@ -30,9 +30,11 @@ def analyse(output_dir: Path):
             for row in reader:
                 yield tuple(row)
 
+    logging.info("Loading graph...")
     # g = gt.Graph(edges(graph_ncol), hashed=True, directed=False)
     g = gt.collection.data["astro-ph"]
 
+    logging.info("Minimizing nested blockmodel...")
     state = gt.minimize_nested_blockmodel_dl(g)
 
     def save_paths(g, state):
@@ -59,6 +61,7 @@ def analyse(output_dir: Path):
 
                 f_out.write(f"{'\t'.join(path)}\n")
 
+    logging.info("Saving output...")
     save_paths(g, state)
 
 @click.command()
