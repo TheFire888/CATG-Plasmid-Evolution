@@ -47,7 +47,7 @@ def analyse(output_dir: Path):
                     break
                 avail.append(lvl)
 
-            for i, node in enumerate(g.vp['label']):
+            for i, node in enumerate(g.vp['ids']):
                 path = [str(i), f"'{node}'"]
                 
                 r = lvls[0].get_blocks()[i]
