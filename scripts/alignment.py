@@ -31,7 +31,7 @@ def run_command(command: list):
         logging.error(f"Erro ao executar o comando: {' '.join(command)}")
         raise
 
-max_target_seqs = 15000
+max_target_seqs = 30000
 query_cover = 80
 subject_cover = 80
 min_score = 35
