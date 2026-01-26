@@ -31,9 +31,9 @@ def run_command(command: list):
         logging.error(f"Erro ao executar o comando: {' '.join(command)}")
         raise
 
-max_target_seqs = 1000
-query_cover = 75
-subject_cover = 75
+max_target_seqs = 5000
+query_cover = 80
+subject_cover = 80
 min_score = 30
 out_columns = ["qseqid", "sseqid", "bitscore"]
 out_format = ["6"] + out_columns
@@ -43,7 +43,7 @@ def align(output_dir: Path, threads) -> None:
     protein_path = output_dir / "split"
     db_path = output_dir / "proteins.dmnd"
     for file in protein_path.iterdir():
-        output_tsv_path = output_dir / f"diamond_results.{file.stem}.tsv"
+        output_tsv_path = output_dir / 'diamond_results' / f"diamond_results.{file.stem}.tsv"
 
         logging.info(f"Executando a busca {file.stem} DIAMOND blastp...")
         blastp_cmd = [
