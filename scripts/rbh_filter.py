@@ -27,7 +27,7 @@ def diamond_filter(output_dir: Path) -> None:
         tmp_dir = output_dir / "duck_tmp"
         tmp_dir.mkdir(exist_ok=True)
         db.execute(f"SET temp_directory = '{tmp_dir}'")
-        db.execute("SET memory_limit = '150GB'") 
+        db.execute("SET memory_limit = '100GB'") 
 
         query = f"""
         COPY (
