@@ -2,8 +2,8 @@
 #SBATCH --job-name=retrieve_metadata
 #SBATCH --partition=max50
 #SBATCH --ntasks=1
-#SBATCH --mem=200GB
-#SBATCH --cpus-per-task=8
+#SBATCH --mem=64GB
+#SBATCH --cpus-per-task=1
 #SBATCH --time=100:00:00
 #SBATCH --output=out/retrieve_metadata%j.out
 #SBATCH --error=err/retrieve_metadata%j.err
