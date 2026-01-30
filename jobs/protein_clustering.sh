@@ -31,13 +31,13 @@ echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
 WORKDIR="/home/lleal/programs/plasmidEvo/rslts"
 
-# awk -v OFS='\t' '{print $1, $2, 1}' "${WORKDIR}/rbh_hits.tsv" > "${WORKDIR}/proteins_edges.tsv"
-# 
-# echo "proteins_edges.tsv done!"
-# 
-# awk '{ if (!seen[$1]++) print $1; if (!seen[$2]++) print $2 }' "${WORKDIR}/diamond_results.tsv" > "${WORKDIR}/proteins_list.txt"
-# 
-# echo "proteins_list.txt done!"
+awk -v OFS='\t' '{print $1, $2, 1}' "${WORKDIR}/rbh_hits.tsv" > "${WORKDIR}/proteins_edges.tsv"
+
+echo "proteins_edges.tsv done!"
+
+awk '{ if (!seen[$1]++) print $1; if (!seen[$2]++) print $2 }' "${WORKDIR}/rbh_hits.tsv" > "${WORKDIR}/proteins_list.txt"
+
+echo "proteins_list.txt done!"
 
 pixi run diamond greedy-vertex-cover \
     --verbose \
