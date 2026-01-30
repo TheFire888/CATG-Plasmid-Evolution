@@ -13,7 +13,7 @@ export PATH="/home/lleal/.pixi/bin:$PATH"
 echo -e "\n## Job ${SLURM_JOB_ID} iniciado em $(date +'%d-%m-%Y as %T') ##\n"
 
 WORKDIR="/home/lleal/programs/plasmidEvo/rslts"
-DATADIR=="/home/lleal/programs/plasmidEvo/data"
+DATADIR="/home/lleal/programs/plasmidEvo/data"
 SCRIPTSDIR="scripts/"
 
 seqkit fx2tab -ni "${DATADIR}/genbank_plasmid_seqs.fna" | awk '{sub(/^>/,""); print $1}' | awk -F'.' '{print $1}' > "${DATADIR}/accession_list.txt"
